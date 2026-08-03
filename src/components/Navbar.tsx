@@ -43,12 +43,12 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white font-jp font-extrabold text-xl shadow-lg shadow-indigo-500/20">
-            漢
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white font-jp font-extrabold text-lg shadow-lg shadow-indigo-500/20">
+            成
           </div>
           <div>
             <span className="font-extrabold text-lg bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-purple-400">
-              Kanji Sensei
+              SaikouNaru <span className="text-xs font-normal text-indigo-400">最高成</span>
             </span>
             <span className="ml-2 text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
               SRS PWA

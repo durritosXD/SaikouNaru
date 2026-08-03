@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'strokes/*.gif'],
       manifest: {
-        name: 'Kanji Sensei - Japanese SRS Learning',
-        short_name: 'Kanji Sensei',
-        description: 'Highly customizable Japanese Kanji, Vocab & Grammar Spaced Repetition learning app.',
+        name: 'SaikouNaru - Japanese SRS Learning',
+        short_name: 'SaikouNaru',
+        description: 'SaikouNaru (最高成) - Become Great. Highly customizable Japanese Kanji, Vocab & Grammar Spaced Repetition app.',
         theme_color: '#0B0F19',
         background_color: '#0B0F19',
         display: 'standalone',

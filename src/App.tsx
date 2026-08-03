@@ -115,10 +115,10 @@ export const App: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#0B0F19] text-white">
         <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-3xl font-jp font-extrabold shadow-2xl animate-pulse">
-          漢
+          成
         </div>
         <h2 className="text-xl font-extrabold mt-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-400">
-          Kanji Sensei
+          SaikouNaru <span className="text-sm font-normal text-indigo-300">最高成</span>
         </h2>
         <p className="text-xs text-gray-400 mt-1">Initializing 3,000 Kanji SRS Database...</p>
       </div>

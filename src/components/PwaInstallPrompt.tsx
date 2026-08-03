@@ -48,9 +48,9 @@ export const PwaInstallPrompt: React.FC = () => {
               <Sparkles className="w-6 h-6 animate-pulse" />
             </div>
             <div>
-              <h4 className="font-bold text-lg text-indigo-200">Install Kanji Sensei PWA</h4>
+              <h4 className="font-bold text-lg text-indigo-200">Install SaikouNaru (最高成) PWA</h4>
               <p className="text-xs text-gray-300 mt-1">
-                Install as a desktop/mobile application to study offline anytime with full SRS data sync.
+                Install as a desktop/mobile application to study offline anytime with full SRS sync.
               </p>
             </div>
           </div>
