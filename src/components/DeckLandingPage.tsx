@@ -1,5 +1,5 @@
-import React from 'react';
-import { Layers, Plus, BookOpen, Settings, Flame, Sparkles, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Layers, Plus, BookOpen, Settings, Flame, Sparkles, ArrowRight, Trash2, AlertTriangle, X } from 'lucide-react';
 import { DeckInstance, KanjiCard, SRSRecord } from '../types';
 
 interface DeckLandingPageProps {
@@ -9,6 +9,7 @@ interface DeckLandingPageProps {
   onSelectInstance: (instance: DeckInstance) => void;
   onOpenCreateInstance: () => void;
   onOpenEditInstance: (instance: DeckInstance) => void;
+  onDeleteInstance: (id: string) => void;
   streak: number;
 }
 
@@ -19,9 +20,17 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
   onSelectInstance,
   onOpenCreateInstance,
   onOpenEditInstance,
+  onDeleteInstance,
   streak,
 }) => {
   const now = Date.now();
+  const [deletingInstance, setDeletingInstance] = useState<DeckInstance | null>(null);
+
+  const confirmDelete = () => {
+    if (!deletingInstance) return;
+    onDeleteInstance(deletingInstance.id);
+    setDeletingInstance(null);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
@@ -108,7 +117,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                 className="group relative bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  {/* Top Level Badges & Configure */}
+                  {/* Top Level Badges & Actions */}
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <div className="flex flex-wrap gap-1.5">
                       {inst.jlptLevels.map((lvl) => (
@@ -121,16 +130,31 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                       ))}
                     </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenEditInstance(inst);
-                      }}
-                      className="p-1.5 text-gray-400 hover:text-white hover:bg-[#262626] rounded-xl transition"
-                      title="Configure Deck Instance"
-                    >
-                      <Settings className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenEditInstance(inst);
+                        }}
+                        className="p-1.5 text-gray-400 hover:text-white hover:bg-[#262626] rounded-xl transition"
+                        title="Configure Deck Instance"
+                      >
+                        <Settings className="w-4 h-4" />
+                      </button>
+
+                      {instances.length > 1 && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeletingInstance(inst);
+                          }}
+                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-950/30 rounded-xl transition"
+                          title="Delete Deck Instance"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Title & Description */}
@@ -141,7 +165,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                     {inst.description}
                   </p>
 
-                  {/* Anki 3-Color Badge Counters: Blue = New, Red = Learn, Green = Review */}
+                  {/* Anki 3-Color Badge Counters */}
                   <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-mono font-bold">
                     <span className="px-2.5 py-1 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30" title="New Cards">
                       🔵 {blueNewCount} New
@@ -197,6 +221,46 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deletingInstance && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-md bg-[#121212] border border-red-500/40 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-red-400 font-bold text-lg">
+                <AlertTriangle className="w-5 h-5" />
+                Delete Deck Instance?
+              </div>
+              <button
+                onClick={() => setDeletingInstance(null)}
+                className="p-1 rounded-lg text-gray-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-300 leading-relaxed">
+              Are you sure you want to delete <strong className="text-white">"{deletingInstance.name}"</strong>?
+              This will permanently delete all stored SRS review progress, schedules, and stats for this deck from your browser storage.
+            </p>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setDeletingInstance(null)}
+                className="px-4 py-2 bg-[#1A1A1A] hover:bg-[#262626] border border-[#262626] text-white text-xs font-semibold rounded-xl"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-red-600/30"
+              >
+                Delete Deck & Data
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

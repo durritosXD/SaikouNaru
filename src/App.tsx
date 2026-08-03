@@ -5,7 +5,8 @@ import {
   getAllDeckInstances,
   getAllSRSRecordsForInstance,
   getAllReviewLogs,
-  saveDeckInstance
+  saveDeckInstance,
+  deleteDeckInstance
 } from './services/db';
 import { KanjiCard, DeckInstance, SRSRecord, ReviewLog, CardDisplaySettings } from './types';
 import { Navbar } from './components/Navbar';
@@ -104,6 +105,20 @@ export const App: React.FC = () => {
     setInstances(all);
   };
 
+  const handleDeleteInstance = async (id: string) => {
+    await deleteDeckInstance(id);
+    const updatedInstances = await getAllDeckInstances();
+    setInstances(updatedInstances);
+    if (activeInstance?.id === id) {
+      if (updatedInstances.length > 0) {
+        setActiveInstance(updatedInstances[0]);
+      } else {
+        setActiveInstance(null);
+      }
+    }
+    await refreshRecords();
+  };
+
   // Calculate streak based on reviewLogs
   const streak = React.useMemo(() => {
     if (reviewLogs.length === 0) return 0;
@@ -115,20 +130,16 @@ export const App: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0B0F19] text-white">
-        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-3xl font-jp font-extrabold shadow-2xl animate-pulse">
-          成
-        </div>
-        <h2 className="text-xl font-extrabold mt-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-400">
-          SaikouNaru <span className="text-sm font-normal text-indigo-300">最高成</span>
-        </h2>
-        <p className="text-xs text-gray-400 mt-1">Initializing 3,000 Kanji SRS Database...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
+        <div className="w-12 h-12 border-4 border-[#262626] border-t-white rounded-full animate-spin mb-4" />
+        <h2 className="text-xl font-mono font-bold tracking-wider">Loading SaikouNaru...</h2>
+        <p className="text-xs text-gray-500 mt-1 font-jp">最高成 Japanese SRS Studio</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0F19] text-gray-100">
+    <div className="min-h-screen flex flex-col bg-black text-white nothing-dot-bg font-sans selection:bg-white selection:text-black">
       {/* PWA Install Popup */}
       <PwaInstallPrompt />
 
@@ -170,6 +181,7 @@ export const App: React.FC = () => {
               setInstanceToEdit(inst);
               setIsInstanceModalOpen(true);
             }}
+            onDeleteInstance={handleDeleteInstance}
             streak={streak}
           />
         )}
@@ -213,6 +225,7 @@ export const App: React.FC = () => {
           await loadData();
           handleSelectInstance(savedInstance);
         }}
+        onDelete={handleDeleteInstance}
       />
 
       {/* Live Card Display Customization Drawer */}

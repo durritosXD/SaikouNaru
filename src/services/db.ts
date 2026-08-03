@@ -179,15 +179,26 @@ export async function saveDeckInstance(instance: DeckInstance): Promise<void> {
 export async function deleteDeckInstance(id: string): Promise<void> {
   const db = await getDB();
   await db.delete('deckInstances', id);
-  // Also clean up SRS records for this instance
-  const tx = db.transaction('srsRecords', 'readwrite');
-  const index = tx.store.index('by-instance');
-  let cursor = await index.openCursor(id);
-  while (cursor) {
-    await cursor.delete();
-    cursor = await cursor.continue();
+  
+  // Clean up SRS records for this instance
+  const txSrs = db.transaction('srsRecords', 'readwrite');
+  const indexSrs = txSrs.store.index('by-instance');
+  let cursorSrs = await indexSrs.openCursor(id);
+  while (cursorSrs) {
+    await cursorSrs.delete();
+    cursorSrs = await cursorSrs.continue();
   }
-  await tx.done;
+  await txSrs.done;
+
+  // Clean up Review Logs for this instance
+  const txLogs = db.transaction('reviewLogs', 'readwrite');
+  const indexLogs = txLogs.store.index('by-instance');
+  let cursorLogs = await indexLogs.openCursor(id);
+  while (cursorLogs) {
+    await cursorLogs.delete();
+    cursorLogs = await cursorLogs.continue();
+  }
+  await txLogs.done;
 }
 
 // SRS Records API
