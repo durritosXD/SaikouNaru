@@ -124,9 +124,10 @@ export async function initializeDatabase() {
     console.log(`Seeded/Synced ${kanjiData.length} cards into IndexedDB.`);
   }
 
-  // Seed default deck instances if none exist
+  // Seed default deck instances ONLY on initial first run
+  const instancesInitialized = localStorage.getItem('kanji_deck_instances_initialized_v1') === 'true';
   const instanceCount = await db.count('deckInstances');
-  if (instanceCount === 0) {
+  if (!instancesInitialized && instanceCount === 0) {
     const defaultInstances: DeckInstance[] = [
       {
         id: 'instance_n5',
@@ -164,6 +165,9 @@ export async function initializeDatabase() {
       await db.put('deckInstances', inst);
     }
   }
+
+  // Mark instances initialization as complete so user deletions persist across reloads
+  localStorage.setItem('kanji_deck_instances_initialized_v1', 'true');
 }
 
 // Cards API
