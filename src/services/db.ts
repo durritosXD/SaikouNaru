@@ -100,15 +100,16 @@ export const DEFAULT_DISPLAY_SETTINGS: CardDisplaySettings = {
 export async function initializeDatabase() {
   const db = await getDB();
   
-  // Seed cards if empty
+  // Seed / update cards to sync accurate JLPT level classification
   const count = await db.count('cards');
-  if (count === 0) {
+  if (count === 0 || localStorage.getItem('kanji_jlpt_synced_v2') !== 'true') {
     const tx = db.transaction('cards', 'readwrite');
     for (const card of kanjiData as KanjiCard[]) {
       await tx.store.put(card);
     }
     await tx.done;
-    console.log(`Seeded ${kanjiData.length} cards into IndexedDB.`);
+    localStorage.setItem('kanji_jlpt_synced_v2', 'true');
+    console.log(`Seeded/Synced ${kanjiData.length} cards into IndexedDB.`);
   }
 
   // Seed default deck instances if none exist
