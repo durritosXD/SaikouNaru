@@ -33,6 +33,9 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,gif,json}'],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024 // 6 MB limit for large pre-bundled decks
+      },
+      devOptions: {
+        enabled: true
       }
     })
   ],
