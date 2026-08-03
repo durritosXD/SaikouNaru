@@ -379,7 +379,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
       {/* SRS Rating Buttons Bar */}
       {isFlipped && previewIntervals && (
-        <div className="mt-6 grid grid-cols-4 gap-3 animate-fade-in">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 animate-fade-in pb-16 md:pb-0">
           <button
             onClick={() => handleRating(1)}
             className="py-3 sm:py-4 px-2 bg-gradient-to-b from-red-600/90 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-2xl font-bold shadow-lg shadow-red-600/30 flex flex-col items-center justify-center gap-1 transition transform hover:scale-105 active:scale-95 border border-red-400/30"

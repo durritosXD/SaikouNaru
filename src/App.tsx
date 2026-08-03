@@ -17,6 +17,7 @@ import { InstanceModal } from './components/InstanceModal';
 import { CardDisplayDrawer } from './components/CardDisplayDrawer';
 import { ImportModal } from './components/ImportModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { MobileBottomNav } from './components/MobileBottomNav';
 
 export const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -206,6 +207,12 @@ export const App: React.FC = () => {
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         onImportComplete={loadData}
+      />
+
+      {/* Mobile Sticky Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
       />
     </div>
   );
