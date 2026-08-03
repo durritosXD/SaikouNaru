@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Plus, BookOpen, Settings, Flame, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Layers, Plus, BookOpen, Settings, Flame, Sparkles, ArrowRight } from 'lucide-react';
 import { DeckInstance, KanjiCard, SRSRecord } from '../types';
 
 interface DeckLandingPageProps {
@@ -25,27 +25,27 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
-      {/* Hero Welcome Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-900/80 via-slate-900/90 to-purple-950/80 border border-indigo-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl">
+      {/* Nothing OS Minimal Hero Banner */}
+      <div className="relative overflow-hidden bg-[#121212] border border-[#262626] rounded-3xl p-6 sm:p-10 shadow-2xl">
         <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-500/40 rounded-xl text-indigo-300 text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-indigo-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-xs font-mono font-bold uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-[#FF0033] animate-pulse" />
             Spaced Repetition & Kanji Studio
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-jp font-extrabold text-white tracking-tight">
-            SaikouNaru <span className="text-indigo-400">最高成</span>
+            SaikouNaru <span className="text-gray-400 font-normal">最高成</span>
           </h1>
-          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-            Select a study deck instance below to begin your daily SRS flashcard session, or create a custom instance tailored to your target JLPT levels.
+          <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+            Select a study deck instance to launch your zero-scroll SRS flashcard session, or configure a custom JLPT deck.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-2xl text-xs font-bold">
+          <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#262626] text-amber-400 rounded-xl text-xs font-mono font-bold">
               <Flame className="w-4 h-4 fill-amber-400" />
-              <span>{streak} Day Study Streak</span>
+              <span>{streak} Day Streak</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 rounded-2xl text-xs font-bold">
-              <BookOpen className="w-4 h-4" />
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#262626] text-gray-300 rounded-xl text-xs font-mono font-bold">
+              <BookOpen className="w-4 h-4 text-indigo-400" />
               <span>3,000 Kanji Library Loaded</span>
             </div>
           </div>
@@ -55,13 +55,13 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
       {/* Deck Instance Tiles Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2 font-mono">
             <Layers className="w-6 h-6 text-indigo-400" />
-            Your Study Decks
+            Study Decks
           </h2>
           <button
             onClick={onOpenCreateInstance}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-indigo-600/30"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold rounded-xl text-xs transition hover:bg-gray-200"
           >
             <Plus className="w-4 h-4" />
             Create Instance
@@ -73,7 +73,6 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
           {instances.map((inst) => {
             const instanceCards = cards.filter((c) => inst.jlptLevels.includes(c.jlpt));
             
-            // Calculate due & new counts
             let dueCount = 0;
             let masteredCount = 0;
 
@@ -91,7 +90,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
             return (
               <div
                 key={inst.id}
-                className="group relative bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-indigo-500/50 rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Top Level Badges & Configure */}
@@ -100,7 +99,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                       {inst.jlptLevels.map((lvl) => (
                         <span
                           key={lvl}
-                          className="px-2.5 py-0.5 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
+                          className="px-2.5 py-0.5 text-xs font-mono font-bold rounded-lg bg-[#1A1A1A] text-white border border-[#262626]"
                         >
                           {lvl}
                         </span>
@@ -112,7 +111,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                         e.stopPropagation();
                         onOpenEditInstance(inst);
                       }}
-                      className="p-1.5 text-gray-400 hover:text-white hover:bg-slate-800 rounded-xl transition"
+                      className="p-1.5 text-gray-400 hover:text-white hover:bg-[#262626] rounded-xl transition"
                       title="Configure Deck Instance"
                     >
                       <Settings className="w-4 h-4" />
@@ -128,27 +127,27 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                   </p>
 
                   {/* Stats Badges */}
-                  <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-                    <span className="px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold">
+                  <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-mono">
+                    <span className="px-2.5 py-1 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 font-semibold">
                       🟢 {dueCount} Reviews Due
                     </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 font-semibold">
+                    <span className="px-2.5 py-1 rounded-xl bg-[#1A1A1A] border border-[#262626] text-indigo-300 font-semibold">
                       🔵 {inst.dailyNewLimit} New/Day
                     </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-slate-800 text-gray-400 font-semibold">
+                    <span className="px-2.5 py-1 rounded-xl bg-[#1A1A1A] border border-[#262626] text-gray-400 font-semibold">
                       {totalCount} Total Kanji
                     </span>
                   </div>
 
                   {/* Progress Bar */}
                   <div className="mt-5 space-y-1.5">
-                    <div className="flex justify-between text-[11px] font-semibold">
+                    <div className="flex justify-between text-[11px] font-mono">
                       <span className="text-gray-400">Mastery Progress</span>
-                      <span className="text-indigo-400">{masteredCount} / {totalCount} ({progressPct}%)</span>
+                      <span className="text-white font-bold">{masteredCount} / {totalCount} ({progressPct}%)</span>
                     </div>
-                    <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                    <div className="w-full h-2 bg-[#000000] rounded-full overflow-hidden border border-[#262626]">
                       <div
-                        className="bg-gradient-to-r from-indigo-500 to-purple-600 h-full transition-all duration-500"
+                        className="bg-white h-full transition-all duration-500"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
@@ -158,10 +157,10 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                 {/* Study Now Button */}
                 <button
                   onClick={() => onSelectInstance(inst)}
-                  className="mt-6 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-2xl text-xs transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 group-hover:scale-[1.02]"
+                  className="mt-6 w-full py-3 bg-white text-black hover:bg-gray-200 font-bold rounded-2xl text-xs transition flex items-center justify-center gap-2 group-hover:scale-[1.02]"
                 >
                   <BookOpen className="w-4 h-4" />
-                  Study Flashcards Now
+                  Launch Study Session
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
                 </button>
               </div>
@@ -171,14 +170,14 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
           {/* Create New Instance Tile */}
           <div
             onClick={onOpenCreateInstance}
-            className="border-2 border-dashed border-slate-800 hover:border-indigo-500/50 bg-slate-900/40 hover:bg-slate-900/80 rounded-3xl p-8 cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[320px]"
+            className="border-2 border-dashed border-[#262626] hover:border-white bg-[#0A0A0A] hover:bg-[#121212] rounded-3xl p-8 cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[320px]"
           >
-            <div className="p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl text-indigo-400 group-hover:scale-110 transition mb-3">
-              <Plus className="w-8 h-8" />
+            <div className="p-4 bg-[#1A1A1A] border border-[#262626] rounded-2xl text-white group-hover:scale-110 transition mb-3">
+              <Plus className="w-8 h-8 text-[#FF0033]" />
             </div>
-            <h4 className="font-bold text-lg text-white">Create Custom Instance</h4>
+            <h4 className="font-bold text-lg text-white font-mono">Create Custom Instance</h4>
             <p className="text-xs text-gray-400 mt-1 max-w-xs">
-              Combine specific JLPT levels (N5, N4, N3...), customize card fields, and set custom daily limits.
+              Combine specific JLPT levels, customize card fields, and set daily limits.
             </p>
           </div>
         </div>

@@ -181,6 +181,7 @@ export const App: React.FC = () => {
             srsRecords={srsRecords}
             onOpenCustomizer={() => setIsCustomizerOpen(true)}
             onRefreshRecords={refreshRecords}
+            onExitSession={() => setActiveTab('home')}
           />
         )}
 

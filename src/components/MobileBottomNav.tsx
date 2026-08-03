@@ -19,7 +19,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/90 px-2 py-1.5 md:hidden shadow-2xl">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-xl border-t border-[#262626] px-2 py-1.5 md:hidden shadow-2xl">
       <div className="flex items-center justify-around max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
@@ -29,14 +29,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition ${
                 isActive
-                  ? 'text-indigo-400 bg-indigo-500/10 font-bold'
-                  : 'text-gray-400 hover:text-gray-200'
+                  ? 'text-white bg-[#1A1A1A] font-bold border border-[#262626]'
+                  : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               <div className={`transition transform ${isActive ? 'scale-110' : ''}`}>
                 {item.icon}
               </div>
-              <span className="text-[10px] mt-0.5 font-medium">{item.label}</span>
+              <span className="text-[10px] font-mono mt-0.5 font-medium">{item.label}</span>
             </button>
           );
         })}

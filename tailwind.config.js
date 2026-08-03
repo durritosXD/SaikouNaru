@@ -8,17 +8,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        jp: {
-          dark: '#0B0F19',
-          card: '#151C2C',
-          border: '#2A344B',
-          accent: '#6366F1',
-          crimson: '#EF4444',
-          gold: '#F59E0B',
-          emerald: '#10B981',
-          cyan: '#06B6D4',
-          purple: '#A855F7',
-          pink: '#EC4899',
+        nothing: {
+          bg: '#000000',
+          card: '#121212',
+          surface: '#1A1A1A',
+          border: '#262626',
+          borderLight: '#404040',
+          red: '#FF0033',
+          gray: '#8E8E93',
+          lightGray: '#D1D1D6',
         }
       },
       fontFamily: {

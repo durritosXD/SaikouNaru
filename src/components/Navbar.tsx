@@ -39,89 +39,90 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/80 px-4 lg:px-8 py-3">
+    <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-[#262626] px-4 lg:px-8 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        {/* Brand Logo */}
+        {/* Brand Logo - Nothing OS Style */}
         <div
           onClick={() => setActiveTab('home')}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white font-jp font-extrabold text-lg shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition">
+          <div className="w-10 h-10 rounded-2xl bg-[#121212] border border-[#262626] flex items-center justify-center text-white font-jp font-bold text-lg group-hover:border-[#404040] transition relative">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF0033] absolute top-1.5 right-1.5" />
             成
           </div>
           <div>
-            <span className="font-extrabold text-lg bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-purple-400">
-              SaikouNaru <span className="text-xs font-normal text-indigo-400">最高成</span>
+            <span className="font-extrabold text-lg text-white font-mono tracking-tight">
+              SaikouNaru <span className="text-xs font-normal text-gray-400 font-jp">最高成</span>
             </span>
-            <span className="ml-2 text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <span className="ml-2 text-[9px] uppercase font-mono font-bold tracking-widest px-1.5 py-0.5 rounded bg-[#1A1A1A] text-gray-400 border border-[#262626]">
               SRS PWA
             </span>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-800/50 p-1 rounded-2xl border border-slate-700/50">
+        {/* Navigation Tabs - Nothing OS Monochrome Pill */}
+        <nav className="hidden md:flex items-center gap-1 bg-[#121212] p-1 rounded-2xl border border-[#262626]">
           <button
             onClick={() => setActiveTab('home')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'home'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-slate-700/50'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
             }`}
           >
             <Layers className="w-4 h-4" />
-            Deck Tiles
+            Decks
           </button>
           <button
             onClick={() => setActiveTab('study')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'study'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-slate-700/50'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            Study Flashcards
+            Study
           </button>
           <button
             onClick={() => setActiveTab('canvas')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'canvas'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-slate-700/50'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
             }`}
           >
             <PenTool className="w-4 h-4" />
-            Stroke Drawing
+            Draw
           </button>
           <button
             onClick={() => setActiveTab('explorer')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'explorer'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-slate-700/50'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            Kanji Explorer
+            Explorer
           </button>
           <button
             onClick={() => setActiveTab('analytics')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'analytics'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-slate-700/50'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
-            Analytics
+            Stats
           </button>
         </nav>
 
         {/* Instance Selector & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Streak Badge */}
-          <div className="flex items-center gap-1 px-2.5 py-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl text-xs font-bold shadow-sm">
+          <div className="flex items-center gap-1 px-2.5 py-1.5 bg-[#121212] border border-[#262626] text-amber-400 rounded-xl text-xs font-mono font-bold">
             <Flame className="w-3.5 h-3.5 fill-amber-400" />
             <span>{streak}<span className="hidden sm:inline"> Day Streak</span></span>
           </div>
@@ -130,9 +131,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 rounded-xl text-xs font-medium text-white transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#121212] hover:bg-[#1A1A1A] border border-[#262626] rounded-xl text-xs font-medium text-white transition"
             >
-              <Layers className="w-3.5 h-3.5 text-indigo-400" />
+              <Layers className="w-3.5 h-3.5 text-gray-400" />
               <span className="max-w-[90px] sm:max-w-[130px] truncate font-semibold text-[11px] sm:text-xs">
                 {activeInstance ? activeInstance.name : 'Select Instance'}
               </span>
@@ -140,8 +141,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-[85vw] sm:w-64 max-w-xs bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in">
-                <div className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <div className="absolute right-0 mt-2 w-[85vw] sm:w-64 max-w-xs bg-[#121212] border border-[#262626] rounded-2xl shadow-2xl p-2 z-50 animate-fade-in">
+                <div className="px-3 py-2 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider">
                   Active Deck Instance
                 </div>
 
@@ -155,28 +156,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between transition ${
                         activeInstance?.id === inst.id
-                          ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40'
-                          : 'text-gray-300 hover:bg-slate-800'
+                          ? 'bg-white text-black font-bold'
+                          : 'text-gray-300 hover:bg-[#1A1A1A]'
                       }`}
                     >
                       <span className="truncate">{inst.name}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-gray-400">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#262626] text-gray-300">
                         {inst.jlptLevels.join(', ')}
                       </span>
                     </button>
                   ))}
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-slate-800 space-y-1">
+                <div className="mt-2 pt-2 border-t border-[#262626] space-y-1">
                   {activeInstance && (
                     <button
                       onClick={() => {
                         setDropdownOpen(false);
                         onOpenEditInstance();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-gray-300 hover:bg-slate-800 flex items-center gap-2"
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-gray-300 hover:bg-[#1A1A1A] flex items-center gap-2"
                     >
-                      <Settings className="w-3.5 h-3.5 text-indigo-400" />
+                      <Settings className="w-3.5 h-3.5 text-gray-400" />
                       Configure Current Instance
                     </button>
                   )}
@@ -185,9 +186,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setDropdownOpen(false);
                       onOpenCreateInstance();
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-indigo-400 hover:bg-indigo-950/40 flex items-center gap-2"
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-white hover:bg-[#1A1A1A] flex items-center gap-2"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-3.5 h-3.5 text-[#FF0033]" />
                     Create New Instance
                   </button>
                 </div>
@@ -198,10 +199,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Custom APKG / JSON Import */}
           <button
             onClick={onOpenImport}
-            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-gray-300 hover:text-white transition"
+            className="p-2 rounded-xl bg-[#121212] hover:bg-[#1A1A1A] border border-[#262626] text-gray-300 hover:text-white transition"
             title="Import custom .apkg or .json deck"
           >
-            <Upload className="w-4 h-4 text-purple-400" />
+            <Upload className="w-4 h-4 text-gray-400" />
           </button>
         </div>
       </div>

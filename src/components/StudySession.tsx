@@ -6,10 +6,10 @@ import {
   Sliders,
   Sparkles,
   CheckCircle2,
-  ArrowRight,
-  Flame,
+  X,
   Layers,
-  BookOpen
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { KanjiCard, DeckInstance, SRSRecord, Rating } from '../types';
@@ -22,6 +22,7 @@ interface StudySessionProps {
   srsRecords: Map<string, SRSRecord>;
   onOpenCustomizer: () => void;
   onRefreshRecords: () => void;
+  onExitSession?: () => void;
 }
 
 export const StudySession: React.FC<StudySessionProps> = ({
@@ -30,11 +31,11 @@ export const StudySession: React.FC<StudySessionProps> = ({
   srsRecords,
   onOpenCustomizer,
   onRefreshRecords,
+  onExitSession,
 }) => {
   const [queue, setQueue] = useState<KanjiCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [completedCount, setCompletedCount] = useState(0);
   const [activeStoryTab, setActiveStoryTab] = useState<'story1' | 'story2'>('story1');
 
   // Initialize queue once when activeInstance changes or cards load
@@ -99,10 +100,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
     const { record: nextRecord } = calculateNextSRS(currentSRS, rating);
 
-    // Save record to DB
     await saveSRSRecord(nextRecord);
-
-    // Save review log
     await saveReviewLog({
       id: `log_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       cardId: currentCard.id,
@@ -113,7 +111,6 @@ export const StudySession: React.FC<StudySessionProps> = ({
       newEaseFactor: nextRecord.easeFactor,
     });
 
-    setCompletedCount(prev => prev + 1);
     setIsFlipped(false);
 
     // If card is still in learning phase or failed (Again), re-queue it at the end of current session queue!
@@ -122,7 +119,6 @@ export const StudySession: React.FC<StudySessionProps> = ({
     }
 
     if (currentIndex + 1 >= queue.length && nextRecord.phase !== 'learning' && nextRecord.phase !== 'relearning') {
-      // Trigger celebrate confetti
       confetti({
         particleCount: 120,
         spread: 70,
@@ -151,11 +147,14 @@ export const StudySession: React.FC<StudySessionProps> = ({
       if (e.key.toLowerCase() === 's') {
         playAudio();
       }
+      if (e.key === 'Escape' && onExitSession) {
+        onExitSession();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentCard, isFlipped, playAudio]);
+  }, [currentCard, isFlipped, playAudio, onExitSession]);
 
   const displaySettings = activeInstance.displaySettings;
   const frontVis = displaySettings.front;
@@ -163,134 +162,133 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
   if (queue.length === 0 || currentIndex >= queue.length) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center animate-fade-in">
-        <div className="w-20 h-20 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-emerald-500/20 mb-6">
+      <div className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+        <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-3xl flex items-center justify-center text-emerald-400 mb-6">
           <CheckCircle2 className="w-10 h-10" />
         </div>
-        <h2 className="text-3xl font-extrabold text-white">Daily Queue Mastered!</h2>
+        <h2 className="text-3xl font-extrabold text-white">Session Completed!</h2>
         <p className="text-sm text-gray-400 mt-2 max-w-md">
-          You have finished all due reviews and new card limits for{' '}
+          All due reviews and daily new card limits mastered for{' '}
           <span className="text-indigo-400 font-semibold">{activeInstance.name}</span>.
         </p>
         <div className="mt-8 flex flex-wrap gap-4 justify-center">
           <button
-            onClick={() => {
-              setCurrentIndex(0);
-              setCompletedCount(0);
-            }}
-            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl text-sm transition shadow-lg shadow-indigo-600/30 flex items-center gap-2"
+            onClick={() => setCurrentIndex(0)}
+            className="px-6 py-3 bg-white text-black font-bold rounded-2xl text-xs transition hover:bg-gray-200 flex items-center gap-2"
           >
             <RotateCw className="w-4 h-4" />
-            Review Again
+            Review Queue Again
           </button>
-          <button
-            onClick={onOpenCustomizer}
-            className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl text-sm transition border border-slate-700 flex items-center gap-2"
-          >
-            <Sliders className="w-4 h-4 text-indigo-400" />
-            Adjust Deck Settings
-          </button>
+          {onExitSession && (
+            <button
+              onClick={onExitSession}
+              className="px-6 py-3 bg-[#1A1A1A] text-white font-bold rounded-2xl text-xs transition border border-[#262626] hover:bg-[#262626]"
+            >
+              Return to Decks
+            </button>
+          )}
         </div>
       </div>
     );
   }
 
   const currentFaceSettings = isFlipped ? backVis : frontVis;
-
   const totalPoolCount = cards.filter(c => activeInstance.jlptLevels.includes(c.jlpt)).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      {/* Progress & Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 font-extrabold text-xs rounded-xl">
-            Today's Queue: {currentIndex + 1} / {queue.length}
+    <div className="fixed inset-0 z-50 bg-black text-white flex flex-col justify-between p-3 sm:p-6 overflow-hidden select-none">
+      {/* 1. Top Compact Control Bar (Zero-Scroll Header) */}
+      <div className="flex items-center justify-between gap-2 pb-2 border-b border-[#262626] shrink-0">
+        <div className="flex items-center gap-2">
+          {onExitSession && (
+            <button
+              onClick={onExitSession}
+              className="p-2 rounded-xl bg-[#121212] hover:bg-[#262626] border border-[#262626] text-gray-400 hover:text-white transition"
+              title="Exit Session (Esc)"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+          <span className="px-3 py-1 bg-[#121212] border border-[#262626] text-white font-mono font-bold text-xs rounded-xl flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#FF0033] animate-pulse" />
+            {currentIndex + 1} / {queue.length}
           </span>
-          <span className="text-xs text-gray-400 font-medium bg-slate-900 px-2.5 py-1 rounded-xl border border-slate-800">
-            Total Pool: <strong className="text-white">{totalPoolCount} Kanji</strong> ({activeInstance.jlptLevels.join(', ')})
-          </span>
-          <span className="text-xs text-gray-400 font-medium">
-            JLPT {currentCard.jlpt} • RTK #{currentCard.rtkNum}
+          <span className="hidden sm:inline-block text-[11px] text-gray-400 bg-[#121212] px-2.5 py-1 rounded-xl border border-[#262626]">
+            Pool: <strong className="text-white">{totalPoolCount}</strong> ({activeInstance.jlptLevels.join(', ')})
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Audio Button */}
           <button
             onClick={playAudio}
-            className="p-2.5 bg-slate-800/80 hover:bg-indigo-900/40 border border-slate-700 hover:border-indigo-500/50 rounded-xl text-indigo-400 transition"
-            title="Pronounce Japanese (Shortcut: S)"
+            className="p-2 bg-[#121212] hover:bg-[#262626] border border-[#262626] rounded-xl text-indigo-400 transition"
+            title="Audio (S)"
           >
             <Volume2 className="w-4 h-4" />
           </button>
-
-          {/* Quick Customization Drawer Trigger */}
           <button
             onClick={onOpenCustomizer}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-semibold text-gray-300 hover:text-white transition"
+            className="flex items-center gap-1.5 px-3 py-2 bg-[#121212] hover:bg-[#262626] border border-[#262626] rounded-xl text-xs font-medium text-gray-300 transition"
           >
-            <Sliders className="w-4 h-4 text-indigo-400" />
-            Customize Display
+            <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="hidden sm:inline">Card Display</span>
           </button>
         </div>
       </div>
 
-      {/* Main Flashcard Container */}
+      {/* 2. Middle Flashcard Viewport (Dynamic Flex Container - 0 Vertical Scroll) */}
       <div
         onClick={() => setIsFlipped(!isFlipped)}
-        className="cursor-pointer relative min-h-[420px] bg-gradient-to-b from-slate-900/90 via-slate-900/95 to-slate-950/90 border border-slate-800 hover:border-indigo-500/40 rounded-3xl p-8 sm:p-10 shadow-2xl transition-all duration-300 flex flex-col justify-between"
+        className="flex-1 my-2 bg-[#121212] border border-[#262626] hover:border-[#404040] rounded-3xl p-4 sm:p-8 flex flex-col justify-between cursor-pointer transition shadow-2xl overflow-hidden relative"
       >
-        {/* Top Card Badge */}
-        <div className="flex items-center justify-between text-xs text-gray-400">
-          <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-indigo-400">
-            <Layers className="w-3.5 h-3.5" />
+        {/* Card Header Indicator */}
+        <div className="flex items-center justify-between text-[11px] text-gray-500 shrink-0">
+          <span className="font-mono uppercase tracking-wider text-indigo-400 font-bold flex items-center gap-1">
+            <Layers className="w-3 h-3" />
             {isFlipped ? 'Answer (Back)' : 'Question (Front)'}
           </span>
-          <span className="text-[11px] text-gray-500 italic">Click card or press [Space] to flip</span>
+          <span>JLPT {currentCard.jlpt} • RTK #{currentCard.rtkNum}</span>
         </div>
 
-        {/* Card Face Content */}
-        <div className="my-auto py-6 flex flex-col items-center text-center space-y-6">
-          {/* Kanji Display */}
+        {/* Card Center Content */}
+        <div className="my-auto py-2 flex flex-col items-center text-center space-y-4 max-h-full overflow-y-auto">
+          {/* Kanji Glyphs (Standard Exam Noto Sans JP Font) */}
           {currentFaceSettings.showKanji && (
-            <div className="relative group">
-              <h1 className="text-7xl sm:text-8xl md:text-9xl font-jp font-extrabold text-white tracking-widest leading-none drop-shadow-2xl">
-                {currentCard.kanji}
-              </h1>
-            </div>
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-jp font-bold text-white tracking-widest leading-none drop-shadow-md">
+              {currentCard.kanji}
+            </h1>
           )}
 
           {/* Keyword / Meaning */}
           {currentFaceSettings.showKeyword && (
-            <div className="text-2xl sm:text-3xl font-extrabold text-indigo-300 tracking-wide">
+            <div className="text-xl sm:text-2xl font-bold text-indigo-300 tracking-wide">
               {currentCard.keyword}
             </div>
           )}
 
           {currentFaceSettings.showMeaning && currentCard.meaning !== currentCard.keyword && (
-            <div className="text-sm text-gray-300 max-w-lg">
+            <div className="text-xs sm:text-sm text-gray-300 max-w-md">
               {currentCard.meaning}
             </div>
           )}
 
           {/* Onyomi / Kunyomi Readings */}
           {currentFaceSettings.showReadings && (currentCard.onyomi || currentCard.kunyomi) && (
-            <div className="flex flex-wrap justify-center gap-4 py-2 border-y border-slate-800/80 w-full max-w-md">
+            <div className="flex flex-wrap justify-center gap-4 py-2 border-y border-[#262626] w-full max-w-md">
               {currentCard.onyomi && (
                 <div className="text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 block mb-0.5">
-                    Onyomi (音読み)
+                  <span className="text-[9px] font-mono uppercase text-indigo-400 block font-bold">
+                    Onyomi (音)
                   </span>
-                  <span className="text-base font-semibold text-gray-200">{currentCard.onyomi}</span>
+                  <span className="text-sm sm:text-base font-medium text-white">{currentCard.onyomi}</span>
                 </div>
               )}
               {currentCard.kunyomi && (
                 <div className="text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 block mb-0.5">
-                    Kunyomi (訓読み)
+                  <span className="text-[9px] font-mono uppercase text-emerald-400 block font-bold">
+                    Kunyomi (訓)
                   </span>
-                  <span className="text-base font-semibold text-gray-200">{currentCard.kunyomi}</span>
+                  <span className="text-sm sm:text-base font-medium text-white">{currentCard.kunyomi}</span>
                 </div>
               )}
             </div>
@@ -298,28 +296,22 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
           {/* Stroke GIF Animation */}
           {currentFaceSettings.showStrokes && currentCard.strokeGif && (
-            <div className="p-3 bg-slate-950/60 border border-slate-800 rounded-2xl flex flex-col items-center">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-                Stroke Order GIF
-              </span>
+            <div className="p-2 bg-[#1A1A1A] border border-[#262626] rounded-2xl flex flex-col items-center">
               <img
                 src={`/strokes/${currentCard.strokeGif}`}
                 alt={`${currentCard.kanji} stroke order`}
-                className="w-24 h-24 object-contain invert brightness-200"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
+                className="w-16 h-16 sm:w-20 sm:h-20 object-contain invert brightness-200"
+                onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
               />
             </div>
           )}
 
           {/* Koohii Stories */}
           {currentFaceSettings.showKoohii && (currentCard.koohii1 || currentCard.koohii2) && (
-            <div className="w-full max-w-xl text-left bg-slate-950/60 border border-indigo-500/20 rounded-2xl p-4 sm:p-5 mt-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  Koohii Mnemonic Story
+            <div className="w-full max-w-lg text-left bg-[#1A1A1A] border border-[#262626] rounded-2xl p-3 sm:p-4 text-xs text-gray-300">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> Koohii Story
                 </span>
                 <div className="flex gap-1">
                   {currentCard.koohii1 && (
@@ -328,10 +320,8 @@ export const StudySession: React.FC<StudySessionProps> = ({
                         e.stopPropagation();
                         setActiveStoryTab('story1');
                       }}
-                      className={`px-2 py-0.5 text-[10px] font-bold rounded-lg ${
-                        activeStoryTab === 'story1'
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-slate-800 text-gray-400'
+                      className={`px-2 py-0.5 text-[9px] font-bold rounded ${
+                        activeStoryTab === 'story1' ? 'bg-indigo-600 text-white' : 'bg-[#262626] text-gray-400'
                       }`}
                     >
                       Story 1
@@ -343,10 +333,8 @@ export const StudySession: React.FC<StudySessionProps> = ({
                         e.stopPropagation();
                         setActiveStoryTab('story2');
                       }}
-                      className={`px-2 py-0.5 text-[10px] font-bold rounded-lg ${
-                        activeStoryTab === 'story2'
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-slate-800 text-gray-400'
+                      className={`px-2 py-0.5 text-[9px] font-bold rounded ${
+                        activeStoryTab === 'story2' ? 'bg-indigo-600 text-white' : 'bg-[#262626] text-gray-400'
                       }`}
                     >
                       Story 2
@@ -355,78 +343,69 @@ export const StudySession: React.FC<StudySessionProps> = ({
                 </div>
               </div>
               <div
-                className="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans"
+                className="leading-relaxed font-sans max-h-24 overflow-y-auto"
                 dangerouslySetInnerHTML={{
                   __html: activeStoryTab === 'story1' ? currentCard.koohii1 : currentCard.koohii2 || currentCard.koohii1,
                 }}
               />
             </div>
           )}
-
-          {/* Sample Vocabulary Words */}
-          {currentFaceSettings.showSampleWords && (currentCard.onWords || currentCard.kunWords) && (
-            <div className="w-full max-w-xl text-left bg-slate-950/40 border border-slate-800 rounded-2xl p-4 text-xs text-gray-300 space-y-2">
-              <span className="font-bold text-gray-400 uppercase tracking-wider block">
-                Sample Vocabulary
-              </span>
-              {currentCard.onWords && (
-                <div dangerouslySetInnerHTML={{ __html: currentCard.onWords }} />
-              )}
-              {currentCard.kunWords && (
-                <div dangerouslySetInnerHTML={{ __html: currentCard.kunWords }} />
-              )}
-            </div>
-          )}
         </div>
 
-        {/* Flip Prompt Hint */}
-        <div className="text-center pt-4 border-t border-slate-800/80 text-xs text-gray-500">
+        {/* Flip Hint */}
+        <div className="text-center pt-2 border-t border-[#262626] text-[11px] text-gray-500 shrink-0">
           {!isFlipped ? (
             <span className="text-indigo-400 font-semibold flex items-center justify-center gap-1">
-              <Eye className="w-4 h-4" /> Click to reveal answer
+              <Eye className="w-3.5 h-3.5" /> Tap card or press [Space] to reveal answer
             </span>
           ) : (
-            <span>Select your recall rating below (Shortcuts: 1, 2, 3, 4)</span>
+            <span>Rate your recall below (Shortcuts: 1, 2, 3, 4)</span>
           )}
         </div>
       </div>
 
-      {/* SRS Rating Buttons Bar */}
-      {isFlipped && previewIntervals && (
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 animate-fade-in pb-16 md:pb-0">
-          <button
-            onClick={() => handleRating(1)}
-            className="py-3 sm:py-4 px-2 bg-gradient-to-b from-red-600/90 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-2xl font-bold shadow-lg shadow-red-600/30 flex flex-col items-center justify-center gap-1 transition transform hover:scale-105 active:scale-95 border border-red-400/30"
-          >
-            <span className="text-sm">Again [1]</span>
-            <span className="text-[11px] font-normal opacity-90">{previewIntervals[1]}</span>
-          </button>
+      {/* 3. Bottom Rating Bar (Tactile, 0 Scroll) */}
+      <div className="shrink-0 pt-1">
+        {isFlipped && previewIntervals ? (
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-2xl mx-auto animate-fade-in">
+            <button
+              onClick={() => handleRating(1)}
+              className="py-3 px-2 bg-gradient-to-b from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 shadow-lg transition active:scale-95 border border-red-500/30"
+            >
+              <span className="text-xs sm:text-sm">Again [1]</span>
+              <span className="text-[10px] font-mono opacity-90">{previewIntervals[1]}</span>
+            </button>
 
-          <button
-            onClick={() => handleRating(2)}
-            className="py-3 sm:py-4 px-2 bg-gradient-to-b from-amber-600/90 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white rounded-2xl font-bold shadow-lg shadow-amber-600/30 flex flex-col items-center justify-center gap-1 transition transform hover:scale-105 active:scale-95 border border-amber-400/30"
-          >
-            <span className="text-sm">Hard [2]</span>
-            <span className="text-[11px] font-normal opacity-90">{previewIntervals[2]}</span>
-          </button>
+            <button
+              onClick={() => handleRating(2)}
+              className="py-3 px-2 bg-gradient-to-b from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 shadow-lg transition active:scale-95 border border-amber-500/30"
+            >
+              <span className="text-xs sm:text-sm">Hard [2]</span>
+              <span className="text-[10px] font-mono opacity-90">{previewIntervals[2]}</span>
+            </button>
 
-          <button
-            onClick={() => handleRating(3)}
-            className="py-3 sm:py-4 px-2 bg-gradient-to-b from-emerald-600/90 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/30 flex flex-col items-center justify-center gap-1 transition transform hover:scale-105 active:scale-95 border border-emerald-400/30"
-          >
-            <span className="text-sm">Good [3]</span>
-            <span className="text-[11px] font-normal opacity-90">{previewIntervals[3]}</span>
-          </button>
+            <button
+              onClick={() => handleRating(3)}
+              className="py-3 px-2 bg-gradient-to-b from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 shadow-lg transition active:scale-95 border border-emerald-500/30"
+            >
+              <span className="text-xs sm:text-sm">Good [3]</span>
+              <span className="text-[10px] font-mono opacity-90">{previewIntervals[3]}</span>
+            </button>
 
-          <button
-            onClick={() => handleRating(4)}
-            className="py-3 sm:py-4 px-2 bg-gradient-to-b from-indigo-600/90 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-600/30 flex flex-col items-center justify-center gap-1 transition transform hover:scale-105 active:scale-95 border border-indigo-400/30"
-          >
-            <span className="text-sm">Easy [4]</span>
-            <span className="text-[11px] font-normal opacity-90">{previewIntervals[4]}</span>
-          </button>
-        </div>
-      )}
+            <button
+              onClick={() => handleRating(4)}
+              className="py-3 px-2 bg-gradient-to-b from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 shadow-lg transition active:scale-95 border border-indigo-500/30"
+            >
+              <span className="text-xs sm:text-sm">Easy [4]</span>
+              <span className="text-[10px] font-mono opacity-90">{previewIntervals[4]}</span>
+            </button>
+          </div>
+        ) : (
+          <div className="py-3 text-center text-xs text-gray-500">
+            Tap card to show answer & rating options
+          </div>
+        )}
+      </div>
     </div>
   );
 };
