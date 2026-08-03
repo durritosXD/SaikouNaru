@@ -6,7 +6,7 @@ export interface DictionaryEntry {
   japanese: string;  // e.g. 犬
   hiragana: string;  // e.g. いぬ
   romaji: string;    // e.g. inu
-  reading: string;   // Kana reading
+  reading: string;   // Clean Kana reading
   english: string;   // English definition
   pos?: string[];
   jlpt?: string;
@@ -17,20 +17,26 @@ export interface DictionaryEntry {
 export interface SentenceBreakdownResult {
   originalText: string;
   japaneseKanji: string;
-  japaneseHiragana: string; // Pure Hiragana / Katakana output (no raw Kanji)
+  japaneseHiragana: string; // Pure clean Hiragana output (no raw Kanji, no dots/dashes)
   tokens: DictionaryEntry[];
+}
+
+// Helper to clean RTK reading format (e.g. "やさ.しい" -> "やさしい", "-かた" -> "かた")
+export function cleanKanaReading(reading: string): string {
+  if (!reading) return '';
+  return reading.replace(/[.\-\s]/g, '');
 }
 
 // Convert KanjiCard dataset into JMdict-style dictionary entries with Hiragana & Romaji
 const kanjiDictList: DictionaryEntry[] = (kanjiData as KanjiCard[]).map((c) => {
-  const reading = c.kunyomi || c.onyomi || c.keyword;
-  const hiragana = c.kunyomi || c.onyomi || c.kanji;
+  const rawReading = c.kunyomi || c.onyomi || c.keyword;
+  const cleanHiragana = cleanKanaReading(rawReading) || c.kanji;
   return {
     id: c.id,
     japanese: c.kanji,
-    hiragana,
+    hiragana: cleanHiragana,
     romaji: c.keyword.toLowerCase(),
-    reading,
+    reading: cleanHiragana,
     english: c.meaning || c.keyword,
     pos: ['Kanji'],
     jlpt: c.jlpt,
@@ -49,24 +55,22 @@ const commonVocabIndex: DictionaryEntry[] = [
   { id: 'v_horse', japanese: '馬', hiragana: 'うま', romaji: 'uma', reading: 'うま', english: 'horse', pos: ['noun'], jlpt: 'N4', type: 'vocab' },
   { id: 'v_cow', japanese: '牛', hiragana: 'うし', romaji: 'ushi', reading: 'うし', english: 'cow; cattle', pos: ['noun'], jlpt: 'N4', type: 'vocab' },
   
-  // Pronouns & People
+  // Pronouns & People & Concepts
   { id: 'v_i', japanese: '私', hiragana: 'わたし', romaji: 'watashi', reading: 'わたし', english: 'I; me', pos: ['pronoun'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_you', japanese: 'あなた', hiragana: 'あなた', romaji: 'anata', reading: 'あなた', english: 'you', pos: ['pronoun'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_friend', japanese: '友達', hiragana: 'ともだち', romaji: 'tomodachi', reading: 'ともだち', english: 'friend', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_person', japanese: '人', hiragana: 'ひと', romaji: 'hito', reading: 'ひと', english: 'person', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
+  { id: 'v_great_person', japanese: '偉人', hiragana: 'いじん', romaji: 'ijin', reading: 'いじん', english: 'great person', pos: ['noun'], jlpt: 'N3', type: 'vocab' },
   
-  // Verbs
+  // Verbs & Auxiliaries
   { id: 'v_eat', japanese: '食べる', hiragana: 'たべる', romaji: 'taberu', reading: 'たべる', english: 'to eat', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_drink', japanese: '飲む', hiragana: 'のむ', romaji: 'nomu', reading: 'のむ', english: 'to drink', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_go', japanese: '行く', hiragana: 'いく', romaji: 'iku', reading: 'いく', english: 'to go', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_come', japanese: '来る', hiragana: 'くる', romaji: 'kuru', reading: 'くる', english: 'to come', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
+  { id: 'v_become', japanese: 'なる', hiragana: 'なる', romaji: 'naru', reading: 'なる', english: 'to become', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
+  { id: 'v_how_to', japanese: '方法', hiragana: 'ほうほう', romaji: 'houhou', reading: 'ほうほう', english: 'method; how to', pos: ['noun'], jlpt: 'N3', type: 'vocab' },
   { id: 'v_see', japanese: '見る', hiragana: 'みる', romaji: 'miru', reading: 'みる', english: 'to see; to watch', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_listen', japanese: '聞く', hiragana: 'きく', romaji: 'kiku', reading: 'きく', english: 'to listen; to hear', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_read', japanese: '読む', hiragana: 'よむ', romaji: 'yomu', reading: 'よむ', english: 'to read', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_write', japanese: '書く', hiragana: 'かく', romaji: 'kaku', reading: 'かく', english: 'to write', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_speak', japanese: '話す', hiragana: 'はなす', romaji: 'hanasu', reading: 'はなす', english: 'to speak; to talk', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_study', japanese: '勉強する', hiragana: 'べんきょうする', romaji: 'benkyou suru', reading: 'べんきょうする', english: 'to study', pos: ['verb'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_love', japanese: '愛する', hiragana: 'あいする', romaji: 'aisuru', reading: 'あいする', english: 'to love', pos: ['verb'], jlpt: 'N4', type: 'vocab' },
+  { id: 'v_great', japanese: '素晴らしい', hiragana: 'すばらしい', romaji: 'subarashii', reading: 'すばらしい', english: 'great; wonderful', pos: ['adjective'], jlpt: 'N4', type: 'vocab' },
   { id: 'v_like', japanese: '好き', hiragana: 'すき', romaji: 'suki', reading: 'すき', english: 'like; fond of', pos: ['adjective'], jlpt: 'N5', type: 'vocab' },
 
   // Nouns & Places
@@ -74,11 +78,6 @@ const commonVocabIndex: DictionaryEntry[] = [
   { id: 'v_language', japanese: '日本語', hiragana: 'にほんご', romaji: 'nihongo', reading: 'にほんご', english: 'Japanese language', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_book', japanese: '本', hiragana: 'ほん', romaji: 'hon', reading: 'ほん', english: 'book', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_water', japanese: '水', hiragana: 'みず', romaji: 'mizu', reading: 'みず', english: 'water', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_food', japanese: '食べ物', hiragana: 'たべもの', romaji: 'tabemono', reading: 'たべもの', english: 'food', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_house', japanese: '家', hiragana: 'うち', romaji: 'uchi', reading: 'うち', english: 'house; home', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_car', japanese: '車', hiragana: 'くるま', romaji: 'kuruma', reading: 'くるま', english: 'car', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_sun', japanese: '日', hiragana: 'ひ', romaji: 'hi', reading: 'ひ', english: 'sun; day', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
-  { id: 'v_moon', japanese: '月', hiragana: 'つき', romaji: 'tsuki', reading: 'つき', english: 'moon; month', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
   { id: 'v_today', japanese: '今日', hiragana: 'きょう', romaji: 'kyou', reading: 'きょう', english: 'today', pos: ['noun'], jlpt: 'N5', type: 'vocab' },
 ];
 
@@ -109,12 +108,12 @@ export function searchDictionary(query: string): DictionaryEntry[] {
 }
 
 /**
- * Converts Japanese text containing Kanji into pure Hiragana
+ * Converts Japanese text containing Kanji into pure clean Hiragana (no raw dots or dashes)
  */
 export function convertKanjiToHiragana(text: string): string {
   let hiraganaText = text;
 
-  // Replace common Kanji words with their pure Hiragana equivalents
+  // Replace common Kanji words with their clean Hiragana equivalents
   for (const item of commonVocabIndex) {
     if (item.japanese !== item.hiragana) {
       hiraganaText = hiraganaText.split(item.japanese).join(item.hiragana);
@@ -123,14 +122,15 @@ export function convertKanjiToHiragana(text: string): string {
 
   // Replace individual Kanji chars using RTK dataset readings
   for (const c of kanjiData as KanjiCard[]) {
-    if (c.kunyomi) {
-      hiraganaText = hiraganaText.split(c.kanji).join(c.kunyomi);
-    } else if (c.onyomi) {
-      hiraganaText = hiraganaText.split(c.kanji).join(c.onyomi);
+    const rawReading = c.kunyomi || c.onyomi || '';
+    const cleanReading = cleanKanaReading(rawReading);
+    if (cleanReading) {
+      hiraganaText = hiraganaText.split(c.kanji).join(cleanReading);
     }
   }
 
-  return hiraganaText;
+  // Clean remaining dots, dashes, or stray formatting
+  return hiraganaText.replace(/[.\-\s]+/g, ' ').trim();
 }
 
 /**
@@ -159,8 +159,11 @@ export async function translateAndBreakdownSentence(sentence: string): Promise<S
     }
   }
 
-  // Generate pure Hiragana version of the translated sentence (no raw Kanji)
-  const pureHiragana = convertKanjiToHiragana(japaneseText);
+  // Clean raw translation output
+  const cleanJapaneseText = japaneseText.replace(/[.,!?:;"]/g, '');
+
+  // Generate pure Hiragana version of the translated sentence (no raw Kanji, no dots/dashes)
+  const pureHiragana = convertKanjiToHiragana(cleanJapaneseText);
 
   // Tokenize sentence into Hiragana vocabulary items
   const tokens: DictionaryEntry[] = [];
@@ -188,7 +191,7 @@ export async function translateAndBreakdownSentence(sentence: string): Promise<S
 
   return {
     originalText: cleanInput,
-    japaneseKanji: japaneseText,
+    japaneseKanji: cleanJapaneseText,
     japaneseHiragana: pureHiragana,
     tokens,
   };

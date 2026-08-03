@@ -53,10 +53,10 @@ export const DictionaryView: React.FC = () => {
     loadRevisionList();
   }, []);
 
-  // Live dictionary search (Defaults to "dog" sample query)
+  // Live dictionary search (Only queries when user types something)
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setSearchResults(searchDictionary('dog'));
+      setSearchResults([]);
     } else {
       setSearchResults(searchDictionary(searchQuery));
     }
@@ -185,94 +185,104 @@ export const DictionaryView: React.FC = () => {
           </div>
 
           {/* Dictionary Results Grid - Hiragana First */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {searchResults.map((entry) => {
-              const isSaved = savedIds.has(entry.hiragana || entry.japanese);
-              return (
-                <div
-                  key={entry.id}
-                  className="bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Header Badges */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <div className="flex items-center gap-1.5 font-mono">
-                        {entry.jlpt && (
-                          <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-white border border-[#262626]">
-                            {entry.jlpt}
-                          </span>
-                        )}
-                        {entry.japanese !== entry.hiragana && (
-                          <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-gray-400 border border-[#262626]">
-                            Kanji: {entry.japanese}
-                          </span>
-                        )}
-                      </div>
-
-                      <button
-                        onClick={() => playAudio(entry.hiragana || entry.japanese)}
-                        className="p-1.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-gray-400 hover:text-white transition"
-                        title="Listen Audio"
-                      >
-                        <Volume2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    {/* Primary Heading: Pure HIRAGANA + Romaji */}
-                    <div className="space-y-1">
-                      <h3 className="text-3xl font-jp font-bold text-white tracking-wide">
-                        {entry.hiragana || entry.reading}
-                      </h3>
-                      <p className="text-xs font-mono text-indigo-400">{entry.romaji}</p>
-                    </div>
-
-                    {/* English Definition */}
-                    <p className="text-xs text-gray-300 mt-3 leading-relaxed">
-                      {entry.english}
-                    </p>
-
-                    {/* Sample Words */}
-                    {entry.sampleWords && entry.sampleWords.length > 0 && (
-                      <div className="mt-3 text-[11px] text-gray-400 border-t border-[#262626] pt-2 space-y-1">
-                        {entry.sampleWords.map((sample, idx) => (
-                          <div key={idx} dangerouslySetInnerHTML={{ __html: sample }} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Add to Revision List Button */}
-                  <button
-                    onClick={() =>
-                      handleAddToList(
-                        entry.hiragana || entry.japanese,
-                        entry.romaji,
-                        entry.english,
-                        entry.type,
-                        entry.jlpt
-                      )
-                    }
-                    disabled={isSaved}
-                    className={`mt-5 w-full py-2.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition ${
-                      isSaved
-                        ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-default'
-                        : 'bg-white text-black hover:bg-gray-200'
-                    }`}
+          {searchResults.length === 0 ? (
+            <div className="bg-[#121212] border border-[#262626] rounded-3xl p-12 text-center space-y-3">
+              <Search className="w-10 h-10 text-gray-500 mx-auto" />
+              <h3 className="text-xl font-mono font-bold text-white">Search Japanese Dictionary</h3>
+              <p className="text-xs text-gray-400 max-w-sm mx-auto font-mono">
+                Type an English word (e.g., "dog", "school", "eat"), Romaji ("inu"), or Hiragana ("いぬ") above to look up definitions.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {searchResults.map((entry) => {
+                const isSaved = savedIds.has(entry.hiragana || entry.japanese);
+                return (
+                  <div
+                    key={entry.id}
+                    className="bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
                   >
-                    {isSaved ? (
-                      <>
-                        <Check className="w-4 h-4" /> Saved in Revision List
-                      </>
-                    ) : (
-                      <>
-                        <Plus className="w-4 h-4 text-[#FF0033]" /> Add to Revision List
-                      </>
-                    )}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+                    <div>
+                      {/* Header Badges */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center gap-1.5 font-mono">
+                          {entry.jlpt && (
+                            <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-white border border-[#262626]">
+                              {entry.jlpt}
+                            </span>
+                          )}
+                          {entry.japanese !== entry.hiragana && (
+                            <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-gray-400 border border-[#262626]">
+                              Kanji: {entry.japanese}
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          onClick={() => playAudio(entry.hiragana || entry.japanese)}
+                          className="p-1.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-gray-400 hover:text-white transition"
+                          title="Listen Audio"
+                        >
+                          <Volume2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      {/* Primary Heading: Pure HIRAGANA + Romaji */}
+                      <div className="space-y-1">
+                        <h3 className="text-3xl font-jp font-bold text-white tracking-wide">
+                          {entry.hiragana || entry.reading}
+                        </h3>
+                        <p className="text-xs font-mono text-indigo-400">{entry.romaji}</p>
+                      </div>
+
+                      {/* English Definition */}
+                      <p className="text-xs text-gray-300 mt-3 leading-relaxed">
+                        {entry.english}
+                      </p>
+
+                      {/* Sample Words */}
+                      {entry.sampleWords && entry.sampleWords.length > 0 && (
+                        <div className="mt-3 text-[11px] text-gray-400 border-t border-[#262626] pt-2 space-y-1">
+                          {entry.sampleWords.map((sample, idx) => (
+                            <div key={idx} dangerouslySetInnerHTML={{ __html: sample }} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Add to Revision List Button */}
+                    <button
+                      onClick={() =>
+                        handleAddToList(
+                          entry.hiragana || entry.japanese,
+                          entry.romaji,
+                          entry.english,
+                          entry.type,
+                          entry.jlpt
+                        )
+                      }
+                      disabled={isSaved}
+                      className={`mt-5 w-full py-2.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition ${
+                        isSaved
+                          ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-default'
+                          : 'bg-white text-black hover:bg-gray-200'
+                      }`}
+                    >
+                      {isSaved ? (
+                        <>
+                          <Check className="w-4 h-4" /> Saved in Revision List
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4 text-[#FF0033]" /> Add to Revision List
+                        </>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
