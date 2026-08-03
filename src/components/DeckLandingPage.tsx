@@ -73,17 +73,32 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
           {instances.map((inst) => {
             const instanceCards = cards.filter((c) => inst.jlptLevels.includes(c.jlpt));
             
-            let dueCount = 0;
+            let greenReviewCount = 0;
+            let redLearnCount = 0;
+            let unstartedCount = 0;
+            let startedNewCount = 0;
             let masteredCount = 0;
 
             for (const c of instanceCards) {
               const rec = srsRecords.get(c.id);
               if (rec) {
-                if (rec.due <= now) dueCount++;
-                if (rec.phase === 'review' && rec.interval >= 14) masteredCount++;
+                if (rec.phase === 'learning' || rec.phase === 'relearning') {
+                  redLearnCount++;
+                } else if (rec.phase === 'review' && rec.due <= now) {
+                  greenReviewCount++;
+                }
+                if (rec.phase === 'review' && rec.interval >= 14) {
+                  masteredCount++;
+                }
+                if (rec.repetitions <= 1) {
+                  startedNewCount++;
+                }
+              } else {
+                unstartedCount++;
               }
             }
 
+            const blueNewCount = Math.min(unstartedCount, Math.max(0, inst.dailyNewLimit - startedNewCount));
             const totalCount = instanceCards.length;
             const progressPct = totalCount ? Math.round((masteredCount / totalCount) * 100) : 0;
 
@@ -126,16 +141,16 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                     {inst.description}
                   </p>
 
-                  {/* Stats Badges */}
-                  <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-mono">
-                    <span className="px-2.5 py-1 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 font-semibold">
-                      🟢 {dueCount} Reviews Due
+                  {/* Anki 3-Color Badge Counters: Blue = New, Red = Learn, Green = Review */}
+                  <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-mono font-bold">
+                    <span className="px-2.5 py-1 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30" title="New Cards">
+                      🔵 {blueNewCount} New
                     </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-[#1A1A1A] border border-[#262626] text-indigo-300 font-semibold">
-                      🔵 {inst.dailyNewLimit} New/Day
+                    <span className="px-2.5 py-1 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30" title="Learning Cards">
+                      🔴 {redLearnCount} Learn
                     </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-[#1A1A1A] border border-[#262626] text-gray-400 font-semibold">
-                      {totalCount} Total Kanji
+                    <span className="px-2.5 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" title="Review Cards">
+                      🟢 {greenReviewCount} Review
                     </span>
                   </div>
 

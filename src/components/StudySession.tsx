@@ -192,12 +192,29 @@ export const StudySession: React.FC<StudySessionProps> = ({
     );
   }
 
+  // Calculate current Anki 3-color queue counts (Blue: New, Red: Learning, Green: Review)
+  const remainingQueue = queue.slice(currentIndex);
+  let blueNewCount = 0;
+  let redLearnCount = 0;
+  let greenReviewCount = 0;
+
+  for (const card of remainingQueue) {
+    const rec = srsRecords.get(card.id);
+    if (!rec || rec.phase === 'new') {
+      blueNewCount++;
+    } else if (rec.phase === 'learning' || rec.phase === 'relearning') {
+      redLearnCount++;
+    } else if (rec.phase === 'review') {
+      greenReviewCount++;
+    }
+  }
+
   const currentFaceSettings = isFlipped ? backVis : frontVis;
   const totalPoolCount = cards.filter(c => activeInstance.jlptLevels.includes(c.jlpt)).length;
 
   return (
     <div className="fixed inset-0 z-50 bg-black text-white flex flex-col justify-between p-3 sm:p-6 overflow-hidden select-none">
-      {/* 1. Top Compact Control Bar (Zero-Scroll Header) */}
+      {/* 1. Top Control Bar with Anki 3-Color Counters */}
       <div className="flex items-center justify-between gap-2 pb-2 border-b border-[#262626] shrink-0">
         <div className="flex items-center gap-2">
           {onExitSession && (
@@ -209,11 +226,21 @@ export const StudySession: React.FC<StudySessionProps> = ({
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="px-3 py-1 bg-[#121212] border border-[#262626] text-white font-mono font-bold text-xs rounded-xl flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#FF0033] animate-pulse" />
-            {currentIndex + 1} / {queue.length}
-          </span>
-          <span className="hidden sm:inline-block text-[11px] text-gray-400 bg-[#121212] px-2.5 py-1 rounded-xl border border-[#262626]">
+
+          {/* Anki 3-Color Badges: Blue = New, Red = Learn, Green = Review */}
+          <div className="flex items-center gap-1.5 font-mono text-xs font-bold">
+            <span className="px-2.5 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-xl" title="New Cards">
+              🔵 {blueNewCount}
+            </span>
+            <span className="px-2.5 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl" title="Learning Cards">
+              🔴 {redLearnCount}
+            </span>
+            <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl" title="Review Cards">
+              🟢 {greenReviewCount}
+            </span>
+          </div>
+
+          <span className="hidden md:inline-block text-[11px] text-gray-400 bg-[#121212] px-2.5 py-1 rounded-xl border border-[#262626]">
             Pool: <strong className="text-white">{totalPoolCount}</strong> ({activeInstance.jlptLevels.join(', ')})
           </span>
         </div>
@@ -236,17 +263,34 @@ export const StudySession: React.FC<StudySessionProps> = ({
         </div>
       </div>
 
-      {/* 2. Middle Flashcard Viewport (Dynamic Flex Container - 0 Vertical Scroll) */}
+      {/* 2. Middle Flashcard Viewport */}
       <div
         onClick={() => setIsFlipped(!isFlipped)}
         className="flex-1 my-2 bg-[#121212] border border-[#262626] hover:border-[#404040] rounded-3xl p-4 sm:p-8 flex flex-col justify-between cursor-pointer transition shadow-2xl overflow-hidden relative"
       >
-        {/* Card Header Indicator */}
+        {/* Card Header Indicator with Anki Phase Color Badge */}
         <div className="flex items-center justify-between text-[11px] text-gray-500 shrink-0">
-          <span className="font-mono uppercase tracking-wider text-indigo-400 font-bold flex items-center gap-1">
-            <Layers className="w-3 h-3" />
-            {isFlipped ? 'Answer (Back)' : 'Question (Front)'}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono uppercase tracking-wider text-indigo-400 font-bold flex items-center gap-1">
+              <Layers className="w-3 h-3" />
+              {isFlipped ? 'Answer (Back)' : 'Question (Front)'}
+            </span>
+            {(!currentSRS || currentSRS.phase === 'new') && (
+              <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold font-mono text-[9px]">
+                NEW
+              </span>
+            )}
+            {(currentSRS?.phase === 'learning' || currentSRS?.phase === 'relearning') && (
+              <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 font-bold font-mono text-[9px]">
+                LEARNING
+              </span>
+            )}
+            {currentSRS?.phase === 'review' && (
+              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold font-mono text-[9px]">
+                REVIEW
+              </span>
+            )}
+          </div>
           <span>JLPT {currentCard.jlpt} • RTK #{currentCard.rtkNum}</span>
         </div>
 
