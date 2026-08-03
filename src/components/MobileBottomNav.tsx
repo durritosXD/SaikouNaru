@@ -1,16 +1,17 @@
 import React from 'react';
-import { BookOpen, PenTool, Sparkles, BarChart3 } from 'lucide-react';
+import { Layers, BookOpen, PenTool, Sparkles, BarChart3 } from 'lucide-react';
 
 interface MobileBottomNavProps {
-  activeTab: 'study' | 'canvas' | 'explorer' | 'analytics';
-  setActiveTab: (tab: 'study' | 'canvas' | 'explorer' | 'analytics') => void;
+  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics';
+  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics') => void;
 }
 
 export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   activeTab,
   setActiveTab,
 }) => {
-  const navItems: { id: 'study' | 'canvas' | 'explorer' | 'analytics'; label: string; icon: React.ReactNode }[] = [
+  const navItems: { id: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics'; label: string; icon: React.ReactNode }[] = [
+    { id: 'home', label: 'Decks', icon: <Layers className="w-5 h-5" /> },
     { id: 'study', label: 'Study', icon: <BookOpen className="w-5 h-5" /> },
     { id: 'canvas', label: 'Draw', icon: <PenTool className="w-5 h-5" /> },
     { id: 'explorer', label: 'Explorer', icon: <Sparkles className="w-5 h-5" /> },

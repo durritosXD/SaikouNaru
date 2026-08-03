@@ -37,34 +37,43 @@ export const StudySession: React.FC<StudySessionProps> = ({
   const [completedCount, setCompletedCount] = useState(0);
   const [activeStoryTab, setActiveStoryTab] = useState<'story1' | 'story2'>('story1');
 
-  // Filter cards by JLPT levels of active instance
+  // Initialize queue once when activeInstance changes or cards load
   useEffect(() => {
     const instanceCards = cards.filter(c => activeInstance.jlptLevels.includes(c.jlpt));
-    
-    // Sort / Filter due cards & new cards according to SRS schedule
     const now = Date.now();
+
     const dueCards: KanjiCard[] = [];
-    const newCards: KanjiCard[] = [];
+    const activeLearningCards: KanjiCard[] = [];
+    const unstartedCards: KanjiCard[] = [];
+    let startedNewCount = 0;
 
     for (const card of instanceCards) {
       const rec = srsRecords.get(card.id);
       if (rec) {
-        if (rec.due <= now) {
+        if (rec.phase === 'learning' || rec.phase === 'relearning') {
+          activeLearningCards.push(card);
+        } else if (rec.due <= now) {
           dueCards.push(card);
         }
+        if (rec.repetitions <= 1) {
+          startedNewCount++;
+        }
       } else {
-        newCards.push(card);
+        unstartedCards.push(card);
       }
     }
 
-    // Limit new cards to activeInstance.dailyNewLimit
-    const selectedNew = newCards.slice(0, activeInstance.dailyNewLimit);
-    const combinedQueue = [...dueCards, ...selectedNew];
+    // Limit brand new cards to the remaining daily quota
+    const remainingNewQuota = Math.max(0, activeInstance.dailyNewLimit - startedNewCount);
+    const selectedNewCards = unstartedCards.slice(0, remainingNewQuota);
 
-    setQueue(combinedQueue);
+    // Initial session queue combining review due cards, active learning cards, and fresh new cards
+    const initialQueue = [...dueCards, ...activeLearningCards, ...selectedNewCards];
+
+    setQueue(initialQueue);
     setCurrentIndex(0);
     setIsFlipped(false);
-  }, [cards, activeInstance, srsRecords]);
+  }, [cards, activeInstance.id]);
 
   const currentCard = queue[currentIndex];
   const currentSRS = currentCard
@@ -107,7 +116,12 @@ export const StudySession: React.FC<StudySessionProps> = ({
     setCompletedCount(prev => prev + 1);
     setIsFlipped(false);
 
-    if (currentIndex + 1 >= queue.length) {
+    // If card is still in learning phase or failed (Again), re-queue it at the end of current session queue!
+    if (nextRecord.phase === 'learning' || nextRecord.phase === 'relearning') {
+      setQueue(prevQueue => [...prevQueue, currentCard]);
+    }
+
+    if (currentIndex + 1 >= queue.length && nextRecord.phase !== 'learning' && nextRecord.phase !== 'relearning') {
       // Trigger celebrate confetti
       confetti({
         particleCount: 120,

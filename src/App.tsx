@@ -9,6 +9,7 @@ import {
 } from './services/db';
 import { KanjiCard, DeckInstance, SRSRecord, ReviewLog, CardDisplaySettings } from './types';
 import { Navbar } from './components/Navbar';
+import { DeckLandingPage } from './components/DeckLandingPage';
 import { StudySession } from './components/StudySession';
 import { StrokeCanvas } from './components/StrokeCanvas';
 import { KanjiExplorer } from './components/KanjiExplorer';
@@ -21,7 +22,7 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 
 export const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'study' | 'canvas' | 'explorer' | 'analytics'>('study');
+  const [activeTab, setActiveTab] = useState<'home' | 'study' | 'canvas' | 'explorer' | 'analytics'>('home');
   
   const [cards, setCards] = useState<KanjiCard[]>([]);
   const [instances, setInstances] = useState<DeckInstance[]>([]);
@@ -152,6 +153,27 @@ export const App: React.FC = () => {
 
       {/* Main View Router */}
       <main className="flex-1 pb-16">
+        {activeTab === 'home' && (
+          <DeckLandingPage
+            instances={instances}
+            cards={cards}
+            srsRecords={srsRecords}
+            onSelectInstance={(inst) => {
+              handleSelectInstance(inst);
+              setActiveTab('study');
+            }}
+            onOpenCreateInstance={() => {
+              setInstanceToEdit(null);
+              setIsInstanceModalOpen(true);
+            }}
+            onOpenEditInstance={(inst) => {
+              setInstanceToEdit(inst);
+              setIsInstanceModalOpen(true);
+            }}
+            streak={streak}
+          />
+        )}
+
         {activeTab === 'study' && activeInstance && (
           <StudySession
             cards={cards}

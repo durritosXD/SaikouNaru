@@ -23,7 +23,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        jp: ['"Noto Serif JP"', 'serif'],
+        jp: ['"Noto Sans JP"', '"Hiragino Kaku Gothic Pro"', 'Meiryo', 'sans-serif'],
       },
       animation: {
         'card-flip': 'flip 0.6s ease-in-out',

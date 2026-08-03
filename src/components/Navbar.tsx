@@ -14,8 +14,8 @@ import {
 import { DeckInstance } from '../types';
 
 interface NavbarProps {
-  activeTab: 'study' | 'canvas' | 'explorer' | 'analytics';
-  setActiveTab: (tab: 'study' | 'canvas' | 'explorer' | 'analytics') => void;
+  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics';
+  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics') => void;
   instances: DeckInstance[];
   activeInstance: DeckInstance | null;
   onSelectInstance: (instance: DeckInstance) => void;
@@ -42,8 +42,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/80 px-4 lg:px-8 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white font-jp font-extrabold text-lg shadow-lg shadow-indigo-500/20">
+        <div
+          onClick={() => setActiveTab('home')}
+          className="flex items-center gap-3 cursor-pointer group"
+        >
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white font-jp font-extrabold text-lg shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition">
             成
           </div>
           <div>
@@ -58,6 +61,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Navigation Tabs */}
         <nav className="hidden md:flex items-center gap-1 bg-slate-800/50 p-1 rounded-2xl border border-slate-700/50">
+          <button
+            onClick={() => setActiveTab('home')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+              activeTab === 'home'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
+                : 'text-gray-400 hover:text-white hover:bg-slate-700/50'
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            Deck Tiles
+          </button>
           <button
             onClick={() => setActiveTab('study')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
