@@ -10,8 +10,9 @@ import {
   Sparkles,
   Volume2,
   Layers,
-  ArrowRight,
-  RefreshCw
+  RefreshCw,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { RevisionItem } from '../types';
 import {
@@ -33,6 +34,7 @@ export const DictionaryView: React.FC = () => {
   const [sentenceInput, setSentenceInput] = useState('');
   const [isTranslating, setIsTranslating] = useState(false);
   const [translationResult, setTranslationResult] = useState<SentenceBreakdownResult | null>(null);
+  const [showKanjiSubtitle, setShowKanjiSubtitle] = useState(false);
 
   // Revision List State
   const [revisionList, setRevisionList] = useState<RevisionItem[]>([]);
@@ -51,10 +53,10 @@ export const DictionaryView: React.FC = () => {
     loadRevisionList();
   }, []);
 
-  // Live dictionary search
+  // Live dictionary search (Defaults to "dog" sample query)
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setSearchResults(searchDictionary('日')); // Default sample query
+      setSearchResults(searchDictionary('dog'));
     } else {
       setSearchResults(searchDictionary(searchQuery));
     }
@@ -134,7 +136,7 @@ export const DictionaryView: React.FC = () => {
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            JMdict Lookup
+            Hiragana/Kana Lookup
           </button>
 
           <button
@@ -146,7 +148,7 @@ export const DictionaryView: React.FC = () => {
             }`}
           >
             <Languages className="w-4 h-4" />
-            Translate & Sentence Breakdown
+            Translator (Pure Hiragana)
           </button>
 
           <button
@@ -163,11 +165,11 @@ export const DictionaryView: React.FC = () => {
         </div>
 
         <div className="px-3 py-1 bg-[#1A1A1A] border border-[#262626] rounded-xl text-[11px] font-mono text-gray-400">
-          JMdict Japanese Dictionary
+          Hiragana Priority Mode
         </div>
       </div>
 
-      {/* 1. JMdict Search View */}
+      {/* 1. Hiragana / Kana Word Lookup View */}
       {activeTab === 'search' && (
         <div className="space-y-6">
           {/* Search Input Bar */}
@@ -177,15 +179,15 @@ export const DictionaryView: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Japanese Kanji, Romaji, Hiragana, or English definition..."
+              placeholder="Search English word (e.g. 'dog'), Romaji ('inu'), or Hiragana ('いぬ')..."
               className="w-full pl-12 pr-4 py-3.5 bg-[#121212] border border-[#262626] focus:border-white rounded-2xl text-white placeholder-gray-500 font-mono text-sm focus:outline-none transition shadow-xl"
             />
           </div>
 
-          {/* Dictionary Results Grid */}
+          {/* Dictionary Results Grid - Hiragana First */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {searchResults.map((entry) => {
-              const isSaved = savedIds.has(entry.japanese);
+              const isSaved = savedIds.has(entry.hiragana || entry.japanese);
               return (
                 <div
                   key={entry.id}
@@ -200,13 +202,15 @@ export const DictionaryView: React.FC = () => {
                             {entry.jlpt}
                           </span>
                         )}
-                        <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-gray-400 border border-[#262626] uppercase">
-                          {entry.type}
-                        </span>
+                        {entry.japanese !== entry.hiragana && (
+                          <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-gray-400 border border-[#262626]">
+                            Kanji: {entry.japanese}
+                          </span>
+                        )}
                       </div>
 
                       <button
-                        onClick={() => playAudio(entry.japanese)}
+                        onClick={() => playAudio(entry.hiragana || entry.japanese)}
                         className="p-1.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-gray-400 hover:text-white transition"
                         title="Listen Audio"
                       >
@@ -214,12 +218,12 @@ export const DictionaryView: React.FC = () => {
                       </button>
                     </div>
 
-                    {/* Kanji & Reading */}
+                    {/* Primary Heading: Pure HIRAGANA + Romaji */}
                     <div className="space-y-1">
                       <h3 className="text-3xl font-jp font-bold text-white tracking-wide">
-                        {entry.japanese}
+                        {entry.hiragana || entry.reading}
                       </h3>
-                      <p className="text-xs font-mono text-indigo-400">{entry.reading}</p>
+                      <p className="text-xs font-mono text-indigo-400">{entry.romaji}</p>
                     </div>
 
                     {/* English Definition */}
@@ -241,8 +245,8 @@ export const DictionaryView: React.FC = () => {
                   <button
                     onClick={() =>
                       handleAddToList(
-                        entry.japanese,
-                        entry.reading,
+                        entry.hiragana || entry.japanese,
+                        entry.romaji,
                         entry.english,
                         entry.type,
                         entry.jlpt
@@ -257,7 +261,7 @@ export const DictionaryView: React.FC = () => {
                   >
                     {isSaved ? (
                       <>
-                        <Check className="w-4 h-4" /> Added to Revision List
+                        <Check className="w-4 h-4" /> Saved in Revision List
                       </>
                     ) : (
                       <>
@@ -272,7 +276,7 @@ export const DictionaryView: React.FC = () => {
         </div>
       )}
 
-      {/* 2. Translator & Sentence Breakdown View */}
+      {/* 2. Pure Hiragana Translator & Sentence Breakdown View */}
       {activeTab === 'translate' && (
         <div className="space-y-6">
           <form onSubmit={handleTranslate} className="space-y-4">
@@ -281,16 +285,16 @@ export const DictionaryView: React.FC = () => {
                 Paste English or Japanese Sentence
               </label>
               <textarea
-                rows={4}
+                rows={3}
                 value={sentenceInput}
                 onChange={(e) => setSentenceInput(e.target.value)}
-                placeholder="Type or paste any sentence, e.g.: 'I love studying Japanese language every day' or '毎日日本語を勉強しています'..."
+                placeholder="Paste sentence, e.g.: 'I love dogs' or 'I study Japanese at school'..."
                 className="w-full p-4 bg-[#1A1A1A] border border-[#262626] focus:border-white rounded-2xl text-white placeholder-gray-500 text-sm focus:outline-none transition resize-none font-mono"
               />
 
               <div className="flex items-center justify-between">
                 <p className="text-xs text-gray-400 font-mono">
-                  Translates English ➔ Japanese and breaks down every vocabulary word.
+                  Translates sentence into **pure Hiragana / Katakana (no raw Kanji)**.
                 </p>
                 <button
                   type="submit"
@@ -303,7 +307,7 @@ export const DictionaryView: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <Languages className="w-4 h-4" /> Translate & Breakdown
+                      <Languages className="w-4 h-4" /> Translate to Hiragana
                     </>
                   )}
                 </button>
@@ -311,36 +315,54 @@ export const DictionaryView: React.FC = () => {
             </div>
           </form>
 
-          {/* Translation Result & Vocabulary Breakdown */}
+          {/* Translation Result & Hiragana Vocabulary Breakdown */}
           {translationResult && (
             <div className="space-y-6 animate-fade-in">
-              {/* Full Japanese Translation Box */}
+              {/* Pure Hiragana Translation Box */}
               <div className="bg-[#121212] border border-[#262626] rounded-3xl p-6 shadow-2xl space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold uppercase text-indigo-400 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4" /> Japanese Translation
+                  <span className="text-xs font-mono font-bold uppercase text-emerald-400 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-[#FF0033]" /> Pure Hiragana Translation (No Kanji)
                   </span>
-                  <button
-                    onClick={() =>
-                      handleAddToList(
-                        translationResult.japaneseTranslation,
-                        translationResult.originalText,
-                        `Sentence: "${translationResult.originalText}"`,
-                        'sentence'
-                      )
-                    }
-                    className="px-3.5 py-1.5 bg-[#1A1A1A] hover:bg-[#262626] border border-[#262626] text-white text-xs font-mono font-bold rounded-xl flex items-center gap-1.5 transition"
-                  >
-                    <Plus className="w-3.5 h-3.5 text-[#FF0033]" /> Add Whole Sentence to List
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowKanjiSubtitle(!showKanjiSubtitle)}
+                      className="px-3 py-1.5 bg-[#1A1A1A] hover:bg-[#262626] border border-[#262626] text-gray-300 text-xs font-mono rounded-xl flex items-center gap-1.5 transition"
+                    >
+                      {showKanjiSubtitle ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      {showKanjiSubtitle ? 'Hide Kanji' : 'Show Kanji Subtitle'}
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleAddToList(
+                          translationResult.japaneseHiragana,
+                          translationResult.originalText,
+                          `Sentence: "${translationResult.originalText}"`,
+                          'sentence'
+                        )
+                      }
+                      className="px-3.5 py-1.5 bg-white text-black hover:bg-gray-200 text-xs font-mono font-bold rounded-xl flex items-center gap-1.5 transition"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-[#FF0033]" /> Add Sentence to List
+                    </button>
+                  </div>
                 </div>
 
+                {/* Main Heading: Pure HIRAGANA Translation */}
                 <div className="flex items-center gap-4 pt-2">
-                  <h2 className="text-2xl sm:text-3xl font-jp font-bold text-white">
-                    {translationResult.japaneseTranslation}
-                  </h2>
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-jp font-bold text-white tracking-wider">
+                      {translationResult.japaneseHiragana}
+                    </h2>
+                    {showKanjiSubtitle && (
+                      <p className="text-xs font-jp text-gray-400 mt-1">
+                        Kanji version: {translationResult.japaneseKanji}
+                      </p>
+                    )}
+                  </div>
                   <button
-                    onClick={() => playAudio(translationResult.japaneseTranslation)}
+                    onClick={() => playAudio(translationResult.japaneseHiragana)}
                     className="p-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-indigo-400 transition"
                   >
                     <Volume2 className="w-4 h-4" />
@@ -348,16 +370,17 @@ export const DictionaryView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Vocabulary Breakdown Tokens Grid */}
+              {/* Hiragana Vocabulary Breakdown Tokens */}
               <div className="space-y-3">
                 <h3 className="text-lg font-mono font-bold text-white flex items-center gap-2">
                   <Layers className="w-5 h-5 text-indigo-400" />
-                  Sentence Vocabulary Breakdown ({translationResult.tokens.length} words)
+                  Hiragana Vocabulary Breakdown ({translationResult.tokens.length} words)
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {translationResult.tokens.map((token, idx) => {
-                    const isSaved = savedIds.has(token.japanese);
+                    const wordText = token.hiragana || token.reading || token.japanese;
+                    const isSaved = savedIds.has(wordText);
                     return (
                       <div
                         key={idx}
@@ -366,24 +389,24 @@ export const DictionaryView: React.FC = () => {
                         <div>
                           <div className="flex items-center justify-between">
                             <span className="text-2xl font-jp font-bold text-white">
-                              {token.japanese}
+                              {wordText}
                             </span>
                             <button
-                              onClick={() => playAudio(token.japanese)}
+                              onClick={() => playAudio(wordText)}
                               className="p-1 rounded bg-[#1A1A1A] text-gray-400 hover:text-white"
                             >
                               <Volume2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
-                          <p className="text-xs font-mono text-indigo-400 mt-1">{token.reading}</p>
+                          <p className="text-xs font-mono text-indigo-400 mt-1">{token.romaji}</p>
                           <p className="text-xs text-gray-300 mt-2">{token.english}</p>
                         </div>
 
                         <button
                           onClick={() =>
                             handleAddToList(
-                              token.japanese,
-                              token.reading,
+                              wordText,
+                              token.romaji,
                               token.english,
                               'vocab',
                               token.jlpt
@@ -414,7 +437,6 @@ export const DictionaryView: React.FC = () => {
         <div className="space-y-6">
           {/* Controls Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121212] p-4 rounded-3xl border border-[#262626]">
-            {/* Filter Tabs */}
             <div className="flex flex-wrap gap-1.5 font-mono text-xs">
               {(['all', 'vocab', 'sentence', 'kanji'] as const).map((filter) => (
                 <button
@@ -431,7 +453,6 @@ export const DictionaryView: React.FC = () => {
               ))}
             </div>
 
-            {/* Search Input */}
             <input
               type="text"
               value={revisionQuery}
@@ -447,7 +468,7 @@ export const DictionaryView: React.FC = () => {
               <Bookmark className="w-10 h-10 text-gray-500 mx-auto" />
               <h3 className="text-xl font-mono font-bold text-white">No Saved Revision Items</h3>
               <p className="text-xs text-gray-400 max-w-sm mx-auto">
-                Search JMdict or translate sentences to add vocabulary and sentences into your periodic revision list.
+                Search Hiragana words or translate sentences to save vocabulary into your revision list.
               </p>
             </div>
           ) : (
