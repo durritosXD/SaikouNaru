@@ -14,8 +14,8 @@ import {
 import { DeckInstance } from '../types';
 
 interface NavbarProps {
-  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics';
-  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics') => void;
+  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary';
+  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary') => void;
   instances: DeckInstance[];
   activeInstance: DeckInstance | null;
   onSelectInstance: (instance: DeckInstance) => void;
@@ -83,6 +83,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BookOpen className="w-4 h-4" />
             Study
+          </button>
+          <button
+            onClick={() => setActiveTab('dictionary')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+              activeTab === 'dictionary'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-[#FF0033]" />
+            JMdict & Revision
           </button>
           <button
             onClick={() => setActiveTab('canvas')}

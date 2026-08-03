@@ -81,3 +81,14 @@ export interface UserStats {
   totalReviews: number;
   correctReviews: number;
 }
+
+export interface RevisionItem {
+  id: string;
+  type: 'vocab' | 'sentence' | 'kanji';
+  japanese: string;
+  reading: string;
+  english: string;
+  jlpt?: string;
+  notes?: string;
+  addedAt: number;
+}

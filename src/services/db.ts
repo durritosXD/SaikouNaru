@@ -1,5 +1,5 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
-import { KanjiCard, DeckInstance, SRSRecord, ReviewLog, UserStats, CardDisplaySettings } from '../types';
+import { KanjiCard, DeckInstance, SRSRecord, ReviewLog, UserStats, CardDisplaySettings, RevisionItem } from '../types';
 import kanjiData from '../data/kanji_rtk_database.json';
 
 interface KanjiSenseiDB extends DBSchema {
@@ -26,10 +26,15 @@ interface KanjiSenseiDB extends DBSchema {
     key: string;
     value: UserStats;
   };
+  revisionList: {
+    key: string;
+    value: RevisionItem;
+    indexes: { 'by-type': string; 'by-added': number };
+  };
 }
 
 const DB_NAME = 'kanji_sensei_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let dbPromise: Promise<IDBPDatabase<KanjiSenseiDB>> | null = null;
 
@@ -66,6 +71,13 @@ export function getDB() {
         // User stats
         if (!db.objectStoreNames.contains('userStats')) {
           db.createObjectStore('userStats', { keyPath: 'lastStudyDay' });
+        }
+
+        // Revision List store
+        if (!db.objectStoreNames.contains('revisionList')) {
+          const revStore = db.createObjectStore('revisionList', { keyPath: 'id' });
+          revStore.createIndex('by-type', 'type');
+          revStore.createIndex('by-added', 'addedAt');
         }
       },
     });
@@ -225,4 +237,20 @@ export async function saveReviewLog(log: ReviewLog): Promise<void> {
 export async function getAllReviewLogs(): Promise<ReviewLog[]> {
   const db = await getDB();
   return db.getAll('reviewLogs');
+}
+
+// Revision List API
+export async function getRevisionList(): Promise<RevisionItem[]> {
+  const db = await getDB();
+  return db.getAll('revisionList');
+}
+
+export async function saveRevisionItem(item: RevisionItem): Promise<void> {
+  const db = await getDB();
+  await db.put('revisionList', item);
+}
+
+export async function deleteRevisionItem(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete('revisionList', id);
 }

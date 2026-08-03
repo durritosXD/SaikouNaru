@@ -1,0 +1,500 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Search,
+  BookOpen,
+  Languages,
+  Plus,
+  Check,
+  Trash2,
+  Bookmark,
+  Sparkles,
+  Volume2,
+  Layers,
+  ArrowRight,
+  RefreshCw
+} from 'lucide-react';
+import { RevisionItem } from '../types';
+import {
+  searchDictionary,
+  translateAndBreakdownSentence,
+  DictionaryEntry,
+  SentenceBreakdownResult
+} from '../services/dictionaryService';
+import { getRevisionList, saveRevisionItem, deleteRevisionItem } from '../services/db';
+
+export const DictionaryView: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'search' | 'translate' | 'revision'>('search');
+
+  // Search State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<DictionaryEntry[]>([]);
+
+  // Translate State
+  const [sentenceInput, setSentenceInput] = useState('');
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translationResult, setTranslationResult] = useState<SentenceBreakdownResult | null>(null);
+
+  // Revision List State
+  const [revisionList, setRevisionList] = useState<RevisionItem[]>([]);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [revisionFilter, setRevisionFilter] = useState<'all' | 'vocab' | 'sentence' | 'kanji'>('all');
+  const [revisionQuery, setRevisionQuery] = useState('');
+
+  // Load Revision List from IndexedDB
+  const loadRevisionList = async () => {
+    const list = await getRevisionList();
+    setRevisionList(list);
+    setSavedIds(new Set(list.map((item) => item.japanese)));
+  };
+
+  useEffect(() => {
+    loadRevisionList();
+  }, []);
+
+  // Live dictionary search
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults(searchDictionary('日')); // Default sample query
+    } else {
+      setSearchResults(searchDictionary(searchQuery));
+    }
+  }, [searchQuery]);
+
+  // Handle sentence translation
+  const handleTranslate = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!sentenceInput.trim()) return;
+
+    setIsTranslating(true);
+    const result = await translateAndBreakdownSentence(sentenceInput);
+    setTranslationResult(result);
+    setIsTranslating(false);
+  };
+
+  // Add Item to Revision List
+  const handleAddToList = async (
+    japanese: string,
+    reading: string,
+    english: string,
+    type: 'vocab' | 'sentence' | 'kanji',
+    jlpt?: string
+  ) => {
+    const newItem: RevisionItem = {
+      id: `rev_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      type,
+      japanese,
+      reading,
+      english,
+      jlpt,
+      addedAt: Date.now(),
+    };
+
+    await saveRevisionItem(newItem);
+    await loadRevisionList();
+  };
+
+  // Remove Item from Revision List
+  const handleRemoveFromList = async (id: string) => {
+    await deleteRevisionItem(id);
+    await loadRevisionList();
+  };
+
+  // Speech synthesis for Japanese audio
+  const playAudio = (text: string) => {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Filtered Revision List
+  const filteredRevisionList = revisionList.filter((item) => {
+    const matchesFilter = revisionFilter === 'all' || item.type === revisionFilter;
+    const matchesSearch =
+      !revisionQuery.trim() ||
+      item.japanese.toLowerCase().includes(revisionQuery.toLowerCase()) ||
+      item.reading.toLowerCase().includes(revisionQuery.toLowerCase()) ||
+      item.english.toLowerCase().includes(revisionQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
+      {/* Nothing OS Header Tabs */}
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121212] p-2 rounded-3xl border border-[#262626]">
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setActiveTab('search')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-mono text-xs font-bold transition ${
+              activeTab === 'search'
+                ? 'bg-white text-black shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            JMdict Lookup
+          </button>
+
+          <button
+            onClick={() => setActiveTab('translate')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-mono text-xs font-bold transition ${
+              activeTab === 'translate'
+                ? 'bg-white text-black shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+            }`}
+          >
+            <Languages className="w-4 h-4" />
+            Translate & Sentence Breakdown
+          </button>
+
+          <button
+            onClick={() => setActiveTab('revision')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-mono text-xs font-bold transition ${
+              activeTab === 'revision'
+                ? 'bg-white text-black shadow'
+                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+            }`}
+          >
+            <Bookmark className="w-4 h-4 text-[#FF0033]" />
+            Revision List ({revisionList.length})
+          </button>
+        </div>
+
+        <div className="px-3 py-1 bg-[#1A1A1A] border border-[#262626] rounded-xl text-[11px] font-mono text-gray-400">
+          JMdict Japanese Dictionary
+        </div>
+      </div>
+
+      {/* 1. JMdict Search View */}
+      {activeTab === 'search' && (
+        <div className="space-y-6">
+          {/* Search Input Bar */}
+          <div className="relative">
+            <Search className="w-5 h-5 absolute left-4 top-4 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Japanese Kanji, Romaji, Hiragana, or English definition..."
+              className="w-full pl-12 pr-4 py-3.5 bg-[#121212] border border-[#262626] focus:border-white rounded-2xl text-white placeholder-gray-500 font-mono text-sm focus:outline-none transition shadow-xl"
+            />
+          </div>
+
+          {/* Dictionary Results Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {searchResults.map((entry) => {
+              const isSaved = savedIds.has(entry.japanese);
+              return (
+                <div
+                  key={entry.id}
+                  className="bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
+                >
+                  <div>
+                    {/* Header Badges */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <div className="flex items-center gap-1.5 font-mono">
+                        {entry.jlpt && (
+                          <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-white border border-[#262626]">
+                            {entry.jlpt}
+                          </span>
+                        )}
+                        <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-gray-400 border border-[#262626] uppercase">
+                          {entry.type}
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={() => playAudio(entry.japanese)}
+                        className="p-1.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-gray-400 hover:text-white transition"
+                        title="Listen Audio"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    {/* Kanji & Reading */}
+                    <div className="space-y-1">
+                      <h3 className="text-3xl font-jp font-bold text-white tracking-wide">
+                        {entry.japanese}
+                      </h3>
+                      <p className="text-xs font-mono text-indigo-400">{entry.reading}</p>
+                    </div>
+
+                    {/* English Definition */}
+                    <p className="text-xs text-gray-300 mt-3 leading-relaxed">
+                      {entry.english}
+                    </p>
+
+                    {/* Sample Words */}
+                    {entry.sampleWords && entry.sampleWords.length > 0 && (
+                      <div className="mt-3 text-[11px] text-gray-400 border-t border-[#262626] pt-2 space-y-1">
+                        {entry.sampleWords.map((sample, idx) => (
+                          <div key={idx} dangerouslySetInnerHTML={{ __html: sample }} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Add to Revision List Button */}
+                  <button
+                    onClick={() =>
+                      handleAddToList(
+                        entry.japanese,
+                        entry.reading,
+                        entry.english,
+                        entry.type,
+                        entry.jlpt
+                      )
+                    }
+                    disabled={isSaved}
+                    className={`mt-5 w-full py-2.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition ${
+                      isSaved
+                        ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-default'
+                        : 'bg-white text-black hover:bg-gray-200'
+                    }`}
+                  >
+                    {isSaved ? (
+                      <>
+                        <Check className="w-4 h-4" /> Added to Revision List
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 text-[#FF0033]" /> Add to Revision List
+                      </>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 2. Translator & Sentence Breakdown View */}
+      {activeTab === 'translate' && (
+        <div className="space-y-6">
+          <form onSubmit={handleTranslate} className="space-y-4">
+            <div className="bg-[#121212] border border-[#262626] rounded-3xl p-6 shadow-2xl space-y-4">
+              <label className="block text-xs font-mono uppercase tracking-wider text-gray-300 font-bold">
+                Paste English or Japanese Sentence
+              </label>
+              <textarea
+                rows={4}
+                value={sentenceInput}
+                onChange={(e) => setSentenceInput(e.target.value)}
+                placeholder="Type or paste any sentence, e.g.: 'I love studying Japanese language every day' or '毎日日本語を勉強しています'..."
+                className="w-full p-4 bg-[#1A1A1A] border border-[#262626] focus:border-white rounded-2xl text-white placeholder-gray-500 text-sm focus:outline-none transition resize-none font-mono"
+              />
+
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400 font-mono">
+                  Translates English ➔ Japanese and breaks down every vocabulary word.
+                </p>
+                <button
+                  type="submit"
+                  disabled={isTranslating || !sentenceInput.trim()}
+                  className="px-6 py-3 bg-white text-black hover:bg-gray-200 font-bold rounded-2xl text-xs font-mono transition flex items-center gap-2 disabled:opacity-50"
+                >
+                  {isTranslating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" /> Translating...
+                    </>
+                  ) : (
+                    <>
+                      <Languages className="w-4 h-4" /> Translate & Breakdown
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </form>
+
+          {/* Translation Result & Vocabulary Breakdown */}
+          {translationResult && (
+            <div className="space-y-6 animate-fade-in">
+              {/* Full Japanese Translation Box */}
+              <div className="bg-[#121212] border border-[#262626] rounded-3xl p-6 shadow-2xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold uppercase text-indigo-400 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4" /> Japanese Translation
+                  </span>
+                  <button
+                    onClick={() =>
+                      handleAddToList(
+                        translationResult.japaneseTranslation,
+                        translationResult.originalText,
+                        `Sentence: "${translationResult.originalText}"`,
+                        'sentence'
+                      )
+                    }
+                    className="px-3.5 py-1.5 bg-[#1A1A1A] hover:bg-[#262626] border border-[#262626] text-white text-xs font-mono font-bold rounded-xl flex items-center gap-1.5 transition"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-[#FF0033]" /> Add Whole Sentence to List
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-4 pt-2">
+                  <h2 className="text-2xl sm:text-3xl font-jp font-bold text-white">
+                    {translationResult.japaneseTranslation}
+                  </h2>
+                  <button
+                    onClick={() => playAudio(translationResult.japaneseTranslation)}
+                    className="p-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-indigo-400 transition"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Vocabulary Breakdown Tokens Grid */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-mono font-bold text-white flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-indigo-400" />
+                  Sentence Vocabulary Breakdown ({translationResult.tokens.length} words)
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {translationResult.tokens.map((token, idx) => {
+                    const isSaved = savedIds.has(token.japanese);
+                    return (
+                      <div
+                        key={idx}
+                        className="bg-[#121212] border border-[#262626] rounded-2xl p-4 shadow-lg flex flex-col justify-between"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-2xl font-jp font-bold text-white">
+                              {token.japanese}
+                            </span>
+                            <button
+                              onClick={() => playAudio(token.japanese)}
+                              className="p-1 rounded bg-[#1A1A1A] text-gray-400 hover:text-white"
+                            >
+                              <Volume2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <p className="text-xs font-mono text-indigo-400 mt-1">{token.reading}</p>
+                          <p className="text-xs text-gray-300 mt-2">{token.english}</p>
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            handleAddToList(
+                              token.japanese,
+                              token.reading,
+                              token.english,
+                              'vocab',
+                              token.jlpt
+                            )
+                          }
+                          disabled={isSaved}
+                          className={`mt-4 w-full py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition ${
+                            isSaved
+                              ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-default'
+                              : 'bg-[#1A1A1A] border border-[#262626] text-white hover:bg-[#262626]'
+                          }`}
+                        >
+                          {isSaved ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5 text-[#FF0033]" />}
+                          {isSaved ? 'Saved' : 'Add Vocab to List'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 3. Revision List View */}
+      {activeTab === 'revision' && (
+        <div className="space-y-6">
+          {/* Controls Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121212] p-4 rounded-3xl border border-[#262626]">
+            {/* Filter Tabs */}
+            <div className="flex flex-wrap gap-1.5 font-mono text-xs">
+              {(['all', 'vocab', 'sentence', 'kanji'] as const).map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setRevisionFilter(filter)}
+                  className={`px-3.5 py-1.5 rounded-xl font-bold uppercase transition ${
+                    revisionFilter === filter
+                      ? 'bg-white text-black'
+                      : 'bg-[#1A1A1A] text-gray-400 hover:text-white border border-[#262626]'
+                  }`}
+                >
+                  {filter} ({revisionList.filter((i) => filter === 'all' || i.type === filter).length})
+                </button>
+              ))}
+            </div>
+
+            {/* Search Input */}
+            <input
+              type="text"
+              value={revisionQuery}
+              onChange={(e) => setRevisionQuery(e.target.value)}
+              placeholder="Filter saved items..."
+              className="px-4 py-2 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-xs font-mono focus:outline-none"
+            />
+          </div>
+
+          {/* Revision Items Grid */}
+          {filteredRevisionList.length === 0 ? (
+            <div className="bg-[#121212] border border-[#262626] rounded-3xl p-12 text-center space-y-3">
+              <Bookmark className="w-10 h-10 text-gray-500 mx-auto" />
+              <h3 className="text-xl font-mono font-bold text-white">No Saved Revision Items</h3>
+              <p className="text-xs text-gray-400 max-w-sm mx-auto">
+                Search JMdict or translate sentences to add vocabulary and sentences into your periodic revision list.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredRevisionList.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                      <span className="px-2 py-0.5 rounded bg-[#1A1A1A] border border-[#262626] font-mono uppercase font-bold text-[10px]">
+                        {item.type}
+                      </span>
+                      <span className="font-mono text-[10px] text-gray-500">
+                        {new Date(item.addedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <h4 className="text-2xl font-jp font-bold text-white">{item.japanese}</h4>
+                    <p className="text-xs font-mono text-indigo-400 mt-0.5">{item.reading}</p>
+                    <p className="text-xs text-gray-300 mt-2 leading-relaxed">{item.english}</p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[#262626] flex items-center justify-between">
+                    <button
+                      onClick={() => playAudio(item.japanese)}
+                      className="p-1.5 rounded-xl bg-[#1A1A1A] text-gray-400 hover:text-white transition"
+                      title="Audio"
+                    >
+                      <Volume2 className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      onClick={() => handleRemoveFromList(item.id)}
+                      className="p-1.5 rounded-xl text-gray-500 hover:text-red-400 hover:bg-red-950/30 transition"
+                      title="Remove from Revision List"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

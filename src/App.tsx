@@ -16,6 +16,7 @@ import { StrokeCanvas } from './components/StrokeCanvas';
 import { KanjiExplorer } from './components/KanjiExplorer';
 import { AnalyticsView } from './components/AnalyticsView';
 import { InstanceModal } from './components/InstanceModal';
+import { DictionaryView } from './components/DictionaryView';
 import { CardDisplayDrawer } from './components/CardDisplayDrawer';
 import { ImportModal } from './components/ImportModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
@@ -23,7 +24,7 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 
 export const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'home' | 'study' | 'canvas' | 'explorer' | 'analytics'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary'>('home');
   
   const [cards, setCards] = useState<KanjiCard[]>([]);
   const [instances, setInstances] = useState<DeckInstance[]>([]);
@@ -195,6 +196,10 @@ export const App: React.FC = () => {
             onRefreshRecords={refreshRecords}
             onExitSession={() => setActiveTab('home')}
           />
+        )}
+
+        {activeTab === 'dictionary' && (
+          <DictionaryView />
         )}
 
         {activeTab === 'canvas' && (
