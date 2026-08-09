@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-theme-primary absolute top-1.5 right-1.5" />
             成
           </div>
-          <div>
+          <div className="hidden sm:block">
             <span className="font-extrabold text-lg text-theme-text font-mono tracking-tight">
               SaikouNaru <span className="text-xs font-normal text-theme-textMuted font-jp">最高成</span>
             </span>
@@ -156,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Deck Instance Dropdown */}
-          <div className="relative">
+          <div className="relative hidden sm:block">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-theme-card hover:bg-theme-surface border border-theme-border rounded-xl text-xs font-medium text-theme-text transition"
