@@ -15,27 +15,27 @@ interface DeckLandingPageProps {
 }
 
 const FloatingHearts = () => {
-  // Generate random hearts across the screen
-  const hearts = Array.from({ length: 15 }).map((_, i) => {
+  // Generate static random hearts across the background
+  const hearts = Array.from({ length: 20 }).map((_, i) => {
     const left = Math.random() * 100;
-    const delay = Math.random() * 5;
-    const duration = 10 + Math.random() * 15;
-    const size = 10 + Math.random() * 30;
-    const opacity = 0.1 + Math.random() * 0.3;
+    const top = Math.random() * 100;
+    const size = 15 + Math.random() * 35;
+    const opacity = 0.15 + Math.random() * 0.4;
+    const rotation = -30 + Math.random() * 60;
     
     return (
       <svg 
         key={i}
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="text-pink-400 absolute animate-float pointer-events-none"
+        className="text-theme-primary absolute pointer-events-none"
         style={{
           left: `${left}%`,
-          bottom: '-50px',
+          top: `${top}%`,
           width: `${size}px`,
           height: `${size}px`,
           opacity: opacity,
-          animation: `float ${duration}s ease-in infinite ${delay}s`
+          transform: `rotate(${rotation}deg)`
         }}
       >
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
