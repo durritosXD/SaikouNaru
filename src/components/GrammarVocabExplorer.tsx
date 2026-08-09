@@ -320,31 +320,33 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                     </div>
 
                     {/* Backside Conjugation Toggles Selector */}
-                    <div className="mt-6">
-                      <label className="text-xs font-mono uppercase text-theme-primary font-bold block mb-2">
-                        Backside Form Toggles (Conjugation)
-                      </label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
-                          const conf = CONJUGATION_LABELS[key];
-                          const isSelected = activeForm === key;
-                          return (
-                            <button
-                              key={key}
-                              onClick={() => setActiveForm(key)}
-                              className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
-                                isSelected
-                                  ? 'bg-white text-black border-white shadow-lg'
-                                  : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-surface'
-                              }`}
-                            >
-                              <span>{conf.label}</span>
-                              <span className="text-[9px] opacity-75 font-jp">{conf.jp}</span>
-                            </button>
-                          );
-                        })}
+                    {vocab.conjugations && Object.keys(vocab.conjugations).length > 0 && (
+                      <div className="mt-6">
+                        <label className="text-xs font-mono uppercase text-theme-primary font-bold block mb-2">
+                          Backside Form Toggles (Conjugation)
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
+                            const conf = CONJUGATION_LABELS[key];
+                            const isSelected = activeForm === key;
+                            return (
+                              <button
+                                key={key}
+                                onClick={() => setActiveForm(key)}
+                                className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
+                                  isSelected
+                                    ? 'bg-theme-primary text-white border-theme-primary shadow-lg'
+                                    : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-surface'
+                                }`}
+                              >
+                                <span>{conf.label}</span>
+                                <span className="text-[9px] opacity-75 font-jp">{conf.jp}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })()
@@ -407,39 +409,6 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                           </div>
                         ))}
                       </div>
-                    </div>
-
-                    {/* Grammar Form Attachment Selector */}
-                    <div className="mt-6">
-                      <label className="text-xs font-mono uppercase text-theme-primary font-bold block mb-2">
-                        Backside Form Toggles (Conjugations)
-                      </label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
-                          const conf = CONJUGATION_LABELS[key];
-                          const isSelected = activeForm === key;
-                          const formGuide = grammar.conjugations ? grammar.conjugations[key] : conf.desc;
-                          return (
-                            <button
-                              key={key}
-                              onClick={() => setActiveForm(key)}
-                              className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
-                                isSelected
-                                  ? 'bg-white text-black border-white shadow-lg'
-                                  : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-surface'
-                              }`}
-                            >
-                              <span>{conf.label}</span>
-                              <span className="text-[9px] opacity-75">{conf.jp}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {grammar.conjugations && (
-                        <div className="mt-2 text-center text-xs font-jp text-indigo-300 p-2 bg-theme-surface rounded-xl border border-theme-border">
-                          Form Rule: {grammar.conjugations[activeForm]}
-                        </div>
-                      )}
                     </div>
                   </div>
                 );

@@ -383,31 +383,33 @@ export const StudySession: React.FC<StudySessionProps> = ({
                     </div>
 
                     {/* Backside Conjugation Toggles (past +ve, past -ve, Te form, Tai form, Shortform, root form) */}
-                    <div onClick={(e) => e.stopPropagation()} className="pt-2">
-                      <span className="text-[10px] font-mono uppercase font-bold text-theme-primary block mb-2">
-                        Backside Form Toggles (Conjugations)
-                      </span>
-                      <div className="grid grid-cols-3 gap-1.5">
-                        {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
-                          const conf = CONJUGATION_LABELS[key];
-                          const isSelected = activeForm === key;
-                          return (
-                            <button
-                              key={key}
-                              onClick={() => setActiveForm(key)}
-                              className={`py-2 px-2 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
-                                isSelected
-                                  ? 'bg-theme-primary text-white border-theme-primary shadow'
-                                  : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-border'
-                              }`}
-                            >
-                              <span>{conf.label}</span>
-                              <span className="text-[8px] opacity-75 font-jp">{conf.jp}</span>
-                            </button>
-                          );
-                        })}
+                    {vocabCard.conjugations && Object.keys(vocabCard.conjugations).length > 0 && (
+                      <div onClick={(e) => e.stopPropagation()} className="pt-2">
+                        <span className="text-[10px] font-mono uppercase font-bold text-theme-primary block mb-2">
+                          Backside Form Toggles (Conjugations)
+                        </span>
+                        <div className="grid grid-cols-3 gap-1.5">
+                          {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
+                            const conf = CONJUGATION_LABELS[key];
+                            const isSelected = activeForm === key;
+                            return (
+                              <button
+                                key={key}
+                                onClick={() => setActiveForm(key)}
+                                className={`py-2 px-2 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
+                                  isSelected
+                                    ? 'bg-theme-primary text-white border-theme-primary shadow'
+                                    : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-border'
+                                }`}
+                              >
+                                <span>{conf.label}</span>
+                                <span className="text-[8px] opacity-75 font-jp">{conf.jp}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
               </>
@@ -460,38 +462,6 @@ export const StudySession: React.FC<StudySessionProps> = ({
                           </div>
                         ))}
                       </div>
-                    </div>
-
-                    {/* Backside Conjugation Toggles */}
-                    <div onClick={(e) => e.stopPropagation()} className="pt-1">
-                      <span className="text-[10px] font-mono uppercase font-bold text-theme-primary block mb-1.5">
-                        Backside Form Toggles (Conjugations)
-                      </span>
-                      <div className="grid grid-cols-3 gap-1.5">
-                        {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
-                          const conf = CONJUGATION_LABELS[key];
-                          const isSelected = activeForm === key;
-                          return (
-                            <button
-                              key={key}
-                              onClick={() => setActiveForm(key)}
-                              className={`py-1.5 px-2 rounded-xl border text-[11px] font-bold transition flex flex-col items-center justify-center ${
-                                isSelected
-                                  ? 'bg-theme-primary text-white border-theme-primary shadow'
-                                  : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-border'
-                              }`}
-                            >
-                              <span>{conf.label}</span>
-                              <span className="text-[8px] opacity-75 font-jp">{conf.jp}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {grammarCard.conjugations && (
-                        <div className="mt-1 text-center text-[10px] font-jp text-indigo-300 p-1.5 bg-theme-surface rounded-xl border border-theme-border">
-                          Form Rule: {grammarCard.conjugations[activeForm]}
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
