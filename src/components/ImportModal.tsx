@@ -51,7 +51,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-1 rounded-xl text-gray-400 hover:text-theme-text hover:bg-slate-800 transition"
+          className="absolute top-6 right-6 p-1 rounded-xl text-theme-textMuted hover:text-theme-text hover:bg-slate-800 transition"
         >
           <X className="w-5 h-5" />
         </button>
@@ -62,14 +62,14 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-xl text-theme-text">Import Custom Deck</h3>
-            <p className="text-xs text-gray-400">Support for Anki (.apkg) & JSON formats.</p>
+            <p className="text-xs text-theme-textMuted">Support for Anki (.apkg) & JSON formats.</p>
           </div>
         </div>
 
         <div className="mt-6 border-2 border-dashed border-slate-700 hover:border-indigo-500/50 rounded-2xl p-8 text-center bg-slate-950/40 transition">
-          <FileText className="w-10 h-10 text-indigo-400 mx-auto mb-3 animate-pulse" />
+          <FileText className="w-10 h-10 text-theme-primary mx-auto mb-3 animate-pulse" />
           <p className="text-sm font-semibold text-theme-text">Drag & drop deck file here or click to browse</p>
-          <p className="text-xs text-gray-500 mt-1">Accepts .apkg (Anki package) or .json cards array</p>
+          <p className="text-xs text-theme-textMuted mt-1">Accepts .apkg (Anki package) or .json cards array</p>
 
           <input
             type="file"

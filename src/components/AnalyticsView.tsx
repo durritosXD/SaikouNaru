@@ -72,43 +72,43 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
     <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
       <div>
         <h2 className="text-2xl font-extrabold text-theme-text flex items-center gap-2">
-          <BarChart3 className="w-6 h-6 text-indigo-400" />
+          <BarChart3 className="w-6 h-6 text-theme-primary" />
           SRS Analytics & JLPT Mastery
         </h2>
-        <p className="text-xs text-gray-400 mt-1">
-          Detailed metrics for <span className="text-indigo-400 font-semibold">{activeInstance.name}</span> and overall Japanese progress.
+        <p className="text-xs text-theme-textMuted mt-1">
+          Detailed metrics for <span className="text-theme-primary font-semibold">{activeInstance.name}</span> and overall Japanese progress.
         </p>
       </div>
 
       {/* Top Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-2xl">
+          <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-theme-primary rounded-2xl">
             <Flame className="w-6 h-6" />
           </div>
           <div>
             <span className="text-2xl font-extrabold text-theme-text">{streak} Days</span>
-            <span className="text-xs text-gray-400 block font-medium">Active Daily Streak</span>
+            <span className="text-xs text-theme-textMuted block font-medium">Active Daily Streak</span>
           </div>
         </div>
 
         <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl">
+          <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 text-theme-primary rounded-2xl">
             <Trophy className="w-6 h-6" />
           </div>
           <div>
             <span className="text-2xl font-extrabold text-theme-text">{totalReviewsCount}</span>
-            <span className="text-xs text-gray-400 block font-medium">Total Reviews Passed</span>
+            <span className="text-xs text-theme-textMuted block font-medium">Total Reviews Passed</span>
           </div>
         </div>
 
         <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl">
+          <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-theme-primary rounded-2xl">
             <Award className="w-6 h-6" />
           </div>
           <div>
             <span className="text-2xl font-extrabold text-theme-text">{accuracy}%</span>
-            <span className="text-xs text-gray-400 block font-medium">Recall Retention Accuracy</span>
+            <span className="text-xs text-theme-textMuted block font-medium">Recall Retention Accuracy</span>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           </div>
           <div>
             <span className="text-2xl font-extrabold text-theme-text">{srsRecords.size}</span>
-            <span className="text-xs text-gray-400 block font-medium">Cards in SRS Queue</span>
+            <span className="text-xs text-theme-textMuted block font-medium">Cards in SRS Queue</span>
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* JLPT Progress Bars */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
         <h3 className="text-lg font-bold text-theme-text flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-indigo-400" />
+          <CheckCircle2 className="w-5 h-5 text-theme-primary" />
           JLPT Mastery Breakdown
         </h3>
 
@@ -140,7 +140,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                   </span>
                   <span>{st.mastered} Mastered / {st.total} Kanji</span>
                 </span>
-                <span className="font-extrabold text-indigo-400">{st.percentage}%</span>
+                <span className="font-extrabold text-theme-primary">{st.percentage}%</span>
               </div>
 
               <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800">
@@ -157,7 +157,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* 28-Day Study Heatmap Grid */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
         <h3 className="text-lg font-bold text-theme-text flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-indigo-400" />
+          <Calendar className="w-5 h-5 text-theme-primary" />
           4-Week Activity Heatmap
         </h3>
 

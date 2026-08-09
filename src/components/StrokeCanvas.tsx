@@ -80,10 +80,10 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
     <div className="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-extrabold text-theme-text flex items-center justify-center gap-2">
-          <Sparkles className="w-6 h-6 text-indigo-400" />
+          <Sparkles className="w-6 h-6 text-theme-primary" />
           Kanji Stroke Drawing Studio
         </h2>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-theme-textMuted mt-1">
           Practice muscle memory and stroke order for Japanese Kanji.
         </p>
       </div>
@@ -131,14 +131,14 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
               onClick={clearCanvas}
               className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-theme-text text-xs font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
             >
-              <RefreshCw className="w-4 h-4 text-indigo-400" />
+              <RefreshCw className="w-4 h-4 text-theme-primary" />
               Clear Canvas
             </button>
             <button
               onClick={() => setShowGuide(!showGuide)}
               className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-theme-text text-xs font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
             >
-              {showGuide ? <Eye className="w-4 h-4 text-emerald-400" /> : <EyeOff className="w-4 h-4 text-gray-400" />}
+              {showGuide ? <Eye className="w-4 h-4 text-theme-primary" /> : <EyeOff className="w-4 h-4 text-theme-textMuted" />}
               {showGuide ? 'Hide Template' : 'Show Template'}
             </button>
           </div>
@@ -147,12 +147,12 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
         {/* Kanji Reference & Stroke GIF Guide */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-theme-primary">
               Target Kanji ({selectedKanjiIndex + 1} of {cards.length})
             </span>
             <button
               onClick={playAudio}
-              className="p-2 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-indigo-400 hover:bg-indigo-500/20 transition"
+              className="p-2 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-theme-primary hover:bg-indigo-500/20 transition"
               title="Pronounce Kanji"
             >
               <Volume2 className="w-4 h-4" />
@@ -163,7 +163,7 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
             <h1 className="text-6xl font-jp font-bold text-theme-text">{currentCard?.kanji}</h1>
             <div>
               <h3 className="text-xl font-bold text-indigo-300">{currentCard?.keyword}</h3>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-theme-textMuted">
                 JLPT {currentCard?.jlpt} • RTK #{currentCard?.rtkNum}
               </p>
             </div>
@@ -172,7 +172,7 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
           {/* Stroke GIF Reference */}
           {currentCard?.strokeGif && (
             <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl flex flex-col items-center">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-theme-textMuted mb-2">
                 Animated Stroke Order Guide
               </span>
               <img

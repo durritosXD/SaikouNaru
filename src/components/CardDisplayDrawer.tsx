@@ -43,25 +43,25 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fade-in">
       <div className="w-full max-w-md bg-slate-900 border-l border-slate-800 h-full p-6 overflow-y-auto flex flex-col shadow-2xl">
         <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-2 text-indigo-400">
+          <div className="flex items-center gap-2 text-theme-primary">
             <Sliders className="w-5 h-5" />
             <h3 className="font-bold text-lg text-theme-text">Live Card Customization</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-theme-text hover:bg-slate-800 transition"
+            className="p-1 rounded-lg text-theme-textMuted hover:text-theme-text hover:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 mt-3">
-          Configure exactly what displays on the <span className="text-indigo-400 font-semibold">Front</span> and <span className="text-pink-400 font-semibold">Back</span> of flashcards for this instance.
+        <p className="text-xs text-theme-textMuted mt-3">
+          Configure exactly what displays on the <span className="text-theme-primary font-semibold">Front</span> and <span className="text-pink-400 font-semibold">Back</span> of flashcards for this instance.
         </p>
 
         {/* Front Settings */}
         <div className="mt-6 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-lg w-fit">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-theme-primary bg-indigo-500/10 px-3 py-1.5 rounded-lg w-fit">
             <Layers className="w-4 h-4" />
             Front Face Visible Fields
           </div>
@@ -74,17 +74,17 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
                 className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
                   isVisible
                     ? 'bg-indigo-950/40 border-indigo-500/40 text-theme-text'
-                    : 'bg-slate-800/40 border-slate-700/50 text-gray-400 hover:bg-slate-800'
+                    : 'bg-slate-800/40 border-slate-700/50 text-theme-textMuted hover:bg-slate-800'
                 }`}
               >
                 <div>
                   <p className="text-sm font-medium">{f.label}</p>
-                  <p className="text-xs text-gray-400">{f.desc}</p>
+                  <p className="text-xs text-theme-textMuted">{f.desc}</p>
                 </div>
                 {isVisible ? (
-                  <Eye className="w-5 h-5 text-indigo-400 shrink-0" />
+                  <Eye className="w-5 h-5 text-theme-primary shrink-0" />
                 ) : (
-                  <EyeOff className="w-5 h-5 text-gray-500 shrink-0" />
+                  <EyeOff className="w-5 h-5 text-theme-textMuted shrink-0" />
                 )}
               </div>
             );
@@ -106,17 +106,17 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
                 className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
                   isVisible
                     ? 'bg-pink-950/40 border-pink-500/40 text-theme-text'
-                    : 'bg-slate-800/40 border-slate-700/50 text-gray-400 hover:bg-slate-800'
+                    : 'bg-slate-800/40 border-slate-700/50 text-theme-textMuted hover:bg-slate-800'
                 }`}
               >
                 <div>
                   <p className="text-sm font-medium">{f.label}</p>
-                  <p className="text-xs text-gray-400">{f.desc}</p>
+                  <p className="text-xs text-theme-textMuted">{f.desc}</p>
                 </div>
                 {isVisible ? (
                   <Eye className="w-5 h-5 text-pink-400 shrink-0" />
                 ) : (
-                  <EyeOff className="w-5 h-5 text-gray-500 shrink-0" />
+                  <EyeOff className="w-5 h-5 text-theme-textMuted shrink-0" />
                 )}
               </div>
             );

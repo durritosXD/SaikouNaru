@@ -90,12 +90,12 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-theme-surface border border-theme-border text-amber-400 rounded-xl text-xs font-mono font-bold transition-colors duration-300">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-theme-surface border border-theme-border text-theme-primary rounded-xl text-xs font-mono font-bold transition-colors duration-300">
               <Flame className="w-4 h-4 fill-amber-400" />
               <span>{streak} Day Streak</span>
             </div>
             <div className="flex items-center gap-2 px-3.5 py-1.5 bg-theme-surface border border-theme-border text-indigo-300 rounded-xl text-xs font-mono font-bold transition-colors duration-300">
-              <BookOpen className="w-4 h-4 text-indigo-400" />
+              <BookOpen className="w-4 h-4 text-theme-primary" />
               <span>3,000 Kanji • 8,398 Vocab • 287 Grammar</span>
             </div>
           </div>
@@ -106,7 +106,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl sm:text-2xl font-extrabold text-theme-text flex items-center gap-2 font-mono">
-            <Layers className="w-6 h-6 text-indigo-400" />
+            <Layers className="w-6 h-6 text-theme-primary" />
             Study Decks
           </h2>
           <button
@@ -177,7 +177,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                           e.stopPropagation();
                           onOpenEditInstance(inst);
                         }}
-                        className="p-1.5 text-gray-400 hover:text-theme-text hover:bg-theme-border rounded-xl transition"
+                        className="p-1.5 text-theme-textMuted hover:text-theme-text hover:bg-theme-border rounded-xl transition"
                         title="Configure Deck Instance"
                       >
                         <Settings className="w-4 h-4" />
@@ -189,7 +189,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                             e.stopPropagation();
                             setDeletingInstance(inst);
                           }}
-                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-950/30 rounded-xl transition"
+                          className="p-1.5 text-theme-textMuted hover:text-red-400 hover:bg-red-950/30 rounded-xl transition"
                           title="Delete Deck Instance"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -214,7 +214,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                     <span className="px-2.5 py-1 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30" title="Learning Cards">
                       🔴 {redLearnCount} Learn
                     </span>
-                    <span className="px-2.5 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" title="Review Cards">
+                    <span className="px-2.5 py-1 rounded-xl bg-emerald-500/20 text-theme-primary border border-emerald-500/30" title="Review Cards">
                       🟢 {greenReviewCount} Review
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                   {/* Progress Bar */}
                   <div className="mt-5 space-y-1.5">
                     <div className="flex justify-between text-[11px] font-mono">
-                      <span className="text-gray-400">Mastery Progress</span>
+                      <span className="text-theme-textMuted">Mastery Progress</span>
                       <span className="text-theme-text font-bold">{masteredCount} / {totalCount} ({progressPct}%)</span>
                     </div>
                     <div className="w-full h-2 bg-[#000000] rounded-full overflow-hidden border border-theme-border">
@@ -274,13 +274,13 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
               </div>
               <button
                 onClick={() => setDeletingInstance(null)}
-                className="p-1 rounded-lg text-gray-400 hover:text-theme-text"
+                className="p-1 rounded-lg text-theme-textMuted hover:text-theme-text"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-gray-300 leading-relaxed">
+            <p className="text-xs text-theme-text leading-relaxed">
               Are you sure you want to delete <strong className="text-theme-text">"{deletingInstance.name}"</strong>?
               This will permanently delete all stored SRS review progress, schedules, and stats for this deck from your browser storage.
             </p>

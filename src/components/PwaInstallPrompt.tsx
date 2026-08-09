@@ -44,19 +44,19 @@ export const PwaInstallPrompt: React.FC = () => {
       <div className="bg-gradient-to-r from-indigo-900/90 via-slate-900/95 to-purple-900/90 backdrop-blur-xl border border-indigo-500/40 rounded-2xl p-5 shadow-2xl text-theme-text">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-indigo-500/20 border border-indigo-400/30 rounded-xl text-indigo-400">
+            <div className="p-3 bg-indigo-500/20 border border-indigo-400/30 rounded-xl text-theme-primary">
               <Sparkles className="w-6 h-6 animate-pulse" />
             </div>
             <div>
               <h4 className="font-bold text-lg text-indigo-200">Install SaikouNaru (最高成) PWA</h4>
-              <p className="text-xs text-gray-300 mt-1">
+              <p className="text-xs text-theme-text mt-1">
                 Install as a desktop/mobile application to study offline anytime with full SRS sync.
               </p>
             </div>
           </div>
           <button
             onClick={handleDismiss}
-            className="text-gray-400 hover:text-theme-text p-1 rounded-lg hover:bg-white/10 transition"
+            className="text-theme-textMuted hover:text-theme-text p-1 rounded-lg hover:bg-white/10 transition"
             title="Close popup"
           >
             <X className="w-5 h-5" />
@@ -66,7 +66,7 @@ export const PwaInstallPrompt: React.FC = () => {
         <div className="mt-4 flex items-center justify-end gap-3">
           <button
             onClick={handleDismiss}
-            className="px-3 py-1.5 text-xs text-gray-400 hover:text-theme-text font-medium"
+            className="px-3 py-1.5 text-xs text-theme-textMuted hover:text-theme-text font-medium"
           >
             Not Now
           </button>

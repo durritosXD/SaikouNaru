@@ -13,7 +13,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   const navItems: { id: 'home' | 'study' | 'grammarVocab' | 'dictionary' | 'canvas' | 'explorer' | 'analytics'; label: string; icon: React.ReactNode }[] = [
     { id: 'home', label: 'Decks', icon: <Layers className="w-5 h-5" /> },
     { id: 'study', label: 'Study', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'grammarVocab', label: 'Vocab', icon: <Sparkles className="w-5 h-5 text-indigo-400" /> },
+    { id: 'grammarVocab', label: 'Vocab', icon: <Sparkles className="w-5 h-5 text-theme-primary" /> },
     { id: 'dictionary', label: 'JMdict', icon: <Sparkles className="w-5 h-5 text-theme-primary" /> },
     { id: 'explorer', label: 'Kanji', icon: <Sparkles className="w-5 h-5" /> },
     { id: 'analytics', label: 'Stats', icon: <BarChart3 className="w-5 h-5" /> },
@@ -31,7 +31,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition ${
                 isActive
                   ? 'text-theme-text bg-theme-surface font-bold border border-theme-border'
-                  : 'text-gray-500 hover:text-gray-300'
+                  : 'text-theme-textMuted hover:text-theme-text'
               }`}
             >
               <div className={`transition transform ${isActive ? 'scale-110' : ''}`}>

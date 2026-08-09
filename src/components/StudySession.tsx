@@ -188,13 +188,13 @@ export const StudySession: React.FC<StudySessionProps> = ({
   if (queue.length === 0 || currentIndex >= queue.length) {
     return (
       <div className="fixed inset-0 z-50 bg-theme-bg flex flex-col items-center justify-center p-6 text-center animate-fade-in">
-        <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-3xl flex items-center justify-center text-emerald-400 mb-6">
+        <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-3xl flex items-center justify-center text-theme-primary mb-6">
           <CheckCircle2 className="w-10 h-10" />
         </div>
         <h2 className="text-3xl font-extrabold text-theme-text">Session Completed!</h2>
-        <p className="text-sm text-gray-400 mt-2 max-w-md">
+        <p className="text-sm text-theme-textMuted mt-2 max-w-md">
           All due reviews and daily new card limits mastered for{' '}
-          <span className="text-indigo-400 font-semibold">{activeInstance.name}</span>.
+          <span className="text-theme-primary font-semibold">{activeInstance.name}</span>.
         </p>
         <div className="mt-8 flex flex-wrap gap-4 justify-center">
           <button
@@ -245,7 +245,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
           {onExitSession && (
             <button
               onClick={onExitSession}
-              className="p-2 rounded-xl bg-theme-card hover:bg-theme-border border border-theme-border text-gray-400 hover:text-theme-text transition"
+              className="p-2 rounded-xl bg-theme-card hover:bg-theme-border border border-theme-border text-theme-textMuted hover:text-theme-text transition"
               title="Exit Session (Esc)"
             >
               <X className="w-4 h-4" />
@@ -260,12 +260,12 @@ export const StudySession: React.FC<StudySessionProps> = ({
             <span className="px-2.5 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl" title="Learning Cards">
               🔴 {redLearnCount}
             </span>
-            <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl" title="Review Cards">
+            <span className="px-2.5 py-1 bg-emerald-500/20 text-theme-primary border border-emerald-500/30 rounded-xl" title="Review Cards">
               🟢 {greenReviewCount}
             </span>
           </div>
 
-          <span className="hidden md:inline-block text-[11px] text-gray-400 bg-theme-card px-2.5 py-1 rounded-xl border border-theme-border">
+          <span className="hidden md:inline-block text-[11px] text-theme-textMuted bg-theme-card px-2.5 py-1 rounded-xl border border-theme-border">
             Pool: <strong className="text-theme-text">{totalPoolCount}</strong> ({activeInstance.jlptLevels.join(', ')})
           </span>
         </div>
@@ -273,16 +273,16 @@ export const StudySession: React.FC<StudySessionProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={playAudio}
-            className="p-2 bg-theme-card hover:bg-theme-border border border-theme-border rounded-xl text-indigo-400 transition"
+            className="p-2 bg-theme-card hover:bg-theme-border border border-theme-border rounded-xl text-theme-primary transition"
             title="Audio (S)"
           >
             <Volume2 className="w-4 h-4" />
           </button>
           <button
             onClick={onOpenCustomizer}
-            className="flex items-center gap-1.5 px-3 py-2 bg-theme-card hover:bg-theme-border border border-theme-border rounded-xl text-xs font-medium text-gray-300 transition"
+            className="flex items-center gap-1.5 px-3 py-2 bg-theme-card hover:bg-theme-border border border-theme-border rounded-xl text-xs font-medium text-theme-text transition"
           >
-            <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+            <Sliders className="w-3.5 h-3.5 text-theme-primary" />
             <span className="hidden sm:inline">Card Display</span>
           </button>
         </div>
@@ -294,9 +294,9 @@ export const StudySession: React.FC<StudySessionProps> = ({
         className="flex-1 my-2 bg-theme-card border border-theme-border hover:border-theme-borderLight rounded-3xl p-4 sm:p-8 flex flex-col justify-between cursor-pointer transition shadow-2xl overflow-hidden relative"
       >
         {/* Card Header Indicator */}
-        <div className="flex items-center justify-between text-[11px] text-gray-500 shrink-0">
+        <div className="flex items-center justify-between text-[11px] text-theme-textMuted shrink-0">
           <div className="flex items-center gap-2">
-            <span className="font-mono uppercase tracking-wider text-indigo-400 font-bold flex items-center gap-1">
+            <span className="font-mono uppercase tracking-wider text-theme-primary font-bold flex items-center gap-1">
               <Layers className="w-3 h-3" />
               {isFlipped ? 'Answer (Back)' : 'Question (Front)'}
             </span>
@@ -325,7 +325,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
                   </div>
                 )}
                 {currentFaceSettings.showMeaning && kanjiCard.meaning !== kanjiCard.keyword && (
-                  <div className="text-xs sm:text-sm text-gray-300 max-w-md">
+                  <div className="text-xs sm:text-sm text-theme-text max-w-md">
                     {kanjiCard.meaning}
                   </div>
                 )}
@@ -333,13 +333,13 @@ export const StudySession: React.FC<StudySessionProps> = ({
                   <div className="flex flex-wrap justify-center gap-4 py-2 border-y border-theme-border w-full max-w-md">
                     {kanjiCard.onyomi && (
                       <div className="text-center">
-                        <span className="text-[9px] font-mono uppercase text-indigo-400 block font-bold">Onyomi (音)</span>
+                        <span className="text-[9px] font-mono uppercase text-theme-primary block font-bold">Onyomi (音)</span>
                         <span className="text-sm sm:text-base font-medium text-theme-text">{kanjiCard.onyomi}</span>
                       </div>
                     )}
                     {kanjiCard.kunyomi && (
                       <div className="text-center">
-                        <span className="text-[9px] font-mono uppercase text-emerald-400 block font-bold">Kunyomi (訓)</span>
+                        <span className="text-[9px] font-mono uppercase text-theme-primary block font-bold">Kunyomi (訓)</span>
                         <span className="text-sm sm:text-base font-medium text-theme-text">{kanjiCard.kunyomi}</span>
                       </div>
                     )}
@@ -374,17 +374,17 @@ export const StudySession: React.FC<StudySessionProps> = ({
                 {isFlipped && (
                   <div className="w-full max-w-md space-y-4 animate-fade-in">
                     <div className="p-3 bg-theme-surface border border-theme-border rounded-2xl">
-                      <span className="text-[9px] font-mono uppercase font-bold text-gray-400 block mb-1">
+                      <span className="text-[9px] font-mono uppercase font-bold text-theme-textMuted block mb-1">
                         English Meaning
                       </span>
-                      <p className="text-sm sm:text-base text-gray-200 font-medium">
+                      <p className="text-sm sm:text-base text-theme-text font-medium">
                         {vocabCard.meaning}
                       </p>
                     </div>
 
                     {/* Backside Conjugation Toggles (past +ve, past -ve, Te form, Tai form, Shortform, root form) */}
                     <div onClick={(e) => e.stopPropagation()} className="pt-2">
-                      <span className="text-[10px] font-mono uppercase font-bold text-indigo-400 block mb-2">
+                      <span className="text-[10px] font-mono uppercase font-bold text-theme-primary block mb-2">
                         Backside Form Toggles (Conjugations)
                       </span>
                       <div className="grid grid-cols-3 gap-1.5">
@@ -397,8 +397,8 @@ export const StudySession: React.FC<StudySessionProps> = ({
                               onClick={() => setActiveForm(key)}
                               className={`py-2 px-2 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
                                 isSelected
-                                  ? 'bg-white text-black border-white shadow'
-                                  : 'bg-theme-card text-gray-400 border-theme-border hover:text-theme-text hover:bg-theme-border'
+                                  ? 'bg-theme-primary text-white border-theme-primary shadow'
+                                  : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-border'
                               }`}
                             >
                               <span>{conf.label}</span>
@@ -424,30 +424,30 @@ export const StudySession: React.FC<StudySessionProps> = ({
                 </h1>
 
                 {!isFlipped ? (
-                  <p className="text-sm font-mono text-gray-400 bg-theme-surface px-4 py-2 rounded-2xl border border-theme-border">
+                  <p className="text-sm font-mono text-theme-textMuted bg-theme-surface px-4 py-2 rounded-2xl border border-theme-border">
                     Connection: {grammarCard.structure}
                   </p>
                 ) : (
                   <div className="w-full max-w-md space-y-3 text-left animate-fade-in">
                     {/* Structure & Connection */}
                     <div className="p-3 bg-theme-surface border border-theme-border rounded-2xl">
-                      <span className="text-[9px] font-mono uppercase text-amber-400 font-bold block mb-1">
+                      <span className="text-[9px] font-mono uppercase text-theme-primary font-bold block mb-1">
                         Structure / Connection Rule
                       </span>
-                      <code className="text-xs font-mono text-gray-200">{grammarCard.structure}</code>
+                      <code className="text-xs font-mono text-theme-text">{grammarCard.structure}</code>
                     </div>
 
                     {/* Nuances Explanation */}
                     <div className="p-3 bg-theme-surface border border-theme-border rounded-2xl">
-                      <span className="text-[9px] font-mono uppercase text-indigo-400 font-bold block mb-1 flex items-center gap-1">
+                      <span className="text-[9px] font-mono uppercase text-theme-primary font-bold block mb-1 flex items-center gap-1">
                         <Info className="w-3 h-3" /> Nuances & Usage Context
                       </span>
-                      <p className="text-xs text-gray-300 leading-relaxed">{grammarCard.nuance}</p>
+                      <p className="text-xs text-theme-text leading-relaxed">{grammarCard.nuance}</p>
                     </div>
 
                     {/* Furigana-Only Sample Sentences */}
                     <div className="p-3 bg-theme-surface border border-theme-border rounded-2xl">
-                      <span className="text-[9px] font-mono uppercase text-emerald-400 font-bold block mb-2">
+                      <span className="text-[9px] font-mono uppercase text-theme-primary font-bold block mb-2">
                         Sample Sentences (Furigana Only)
                       </span>
                       <div className="space-y-2">
@@ -456,7 +456,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
                             <p className="text-xs font-jp font-medium text-emerald-300">
                               {sample.furigana}
                             </p>
-                            <p className="text-[11px] text-gray-400 mt-0.5">{sample.english}</p>
+                            <p className="text-[11px] text-theme-textMuted mt-0.5">{sample.english}</p>
                           </div>
                         ))}
                       </div>
@@ -464,7 +464,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
                     {/* Backside Conjugation Toggles */}
                     <div onClick={(e) => e.stopPropagation()} className="pt-1">
-                      <span className="text-[10px] font-mono uppercase font-bold text-indigo-400 block mb-1.5">
+                      <span className="text-[10px] font-mono uppercase font-bold text-theme-primary block mb-1.5">
                         Backside Form Toggles (Conjugations)
                       </span>
                       <div className="grid grid-cols-3 gap-1.5">
@@ -477,8 +477,8 @@ export const StudySession: React.FC<StudySessionProps> = ({
                               onClick={() => setActiveForm(key)}
                               className={`py-1.5 px-2 rounded-xl border text-[11px] font-bold transition flex flex-col items-center justify-center ${
                                 isSelected
-                                  ? 'bg-white text-black border-white shadow'
-                                  : 'bg-theme-card text-gray-400 border-theme-border hover:text-theme-text hover:bg-theme-border'
+                                  ? 'bg-theme-primary text-white border-theme-primary shadow'
+                                  : 'bg-theme-card text-theme-textMuted border-theme-border hover:text-theme-text hover:bg-theme-border'
                               }`}
                             >
                               <span>{conf.label}</span>
@@ -501,9 +501,9 @@ export const StudySession: React.FC<StudySessionProps> = ({
         </div>
 
         {/* Flip Hint */}
-        <div className="text-center pt-2 border-t border-theme-border text-[11px] text-gray-500 shrink-0">
+        <div className="text-center pt-2 border-t border-theme-border text-[11px] text-theme-textMuted shrink-0">
           {!isFlipped ? (
-            <span className="text-indigo-400 font-semibold flex items-center justify-center gap-1">
+            <span className="text-theme-primary font-semibold flex items-center justify-center gap-1">
               <Eye className="w-3.5 h-3.5" /> Tap card or press [Space] to reveal answer & backside conjugations
             </span>
           ) : (
@@ -549,7 +549,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
             </button>
           </div>
         ) : (
-          <div className="py-3 text-center text-xs text-gray-500">
+          <div className="py-3 text-center text-xs text-theme-textMuted">
             Tap card to show answer & rating options
           </div>
         )}

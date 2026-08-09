@@ -103,14 +103,14 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
               <h3 className="font-bold text-xl text-theme-text">
                 {instanceToEdit ? 'Configure Study Instance' : 'Create New Deck Instance'}
               </h3>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-theme-textMuted">
                 Filter by JLPT levels & card types (Kanji, Vocab, Grammar).
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-xl text-gray-400 hover:text-theme-text hover:bg-theme-border transition"
+            className="p-1 rounded-xl text-theme-textMuted hover:text-theme-text hover:bg-theme-border transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -120,7 +120,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
           {/* Name & Description */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-gray-300 mb-1.5">
+              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-theme-text mb-1.5">
                 Instance Title
               </label>
               <input
@@ -133,7 +133,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-gray-300 mb-1.5">
+              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-theme-text mb-1.5">
                 Description
               </label>
               <input
@@ -148,7 +148,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
 
           {/* Card Types Selection */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-indigo-400 mb-2">
+            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-theme-primary mb-2">
               Card Types Included
             </label>
             <div className="grid grid-cols-3 gap-2.5">
@@ -166,7 +166,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                     className={`py-3 rounded-2xl font-bold text-xs border flex flex-col items-center justify-center gap-1 transition ${
                       isSelected
                         ? 'bg-white border-white text-black font-bold shadow-lg'
-                        : 'bg-theme-surface border-theme-border text-gray-400 hover:bg-theme-border hover:text-theme-text'
+                        : 'bg-theme-surface border-theme-border text-theme-textMuted hover:bg-theme-border hover:text-theme-text'
                     }`}
                   >
                     <span>{label}</span>
@@ -179,7 +179,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
 
           {/* JLPT Levels Selection */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-gray-300 mb-2">
+            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-theme-text mb-2">
               JLPT Levels Included
             </label>
             <div className="grid grid-cols-5 gap-2.5">
@@ -193,7 +193,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                     className={`py-3 rounded-2xl font-bold text-sm border flex flex-col items-center justify-center gap-1 transition ${
                       isSelected
                         ? 'bg-white border-white text-black font-bold shadow-lg'
-                        : 'bg-theme-surface border-theme-border text-gray-400 hover:bg-theme-border hover:text-theme-text'
+                        : 'bg-theme-surface border-theme-border text-theme-textMuted hover:bg-theme-border hover:text-theme-text'
                     }`}
                   >
                     <span>{lvl}</span>
@@ -202,7 +202,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 );
               })}
             </div>
-            <p className="text-xs text-gray-400 mt-2 font-mono">
+            <p className="text-xs text-theme-textMuted mt-2 font-mono">
               Selected levels: <span className="text-theme-text font-bold">{selectedLevels.join(', ')}</span>
             </p>
           </div>
@@ -210,7 +210,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
           {/* Daily Limits */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-gray-300 mb-1.5">
+              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-theme-text mb-1.5">
                 Daily New Cards Limit
               </label>
               <input
@@ -223,7 +223,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-gray-300 mb-1.5">
+              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-theme-text mb-1.5">
                 Daily Reviews Limit
               </label>
               <input
@@ -260,7 +260,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 text-xs text-gray-400 hover:text-theme-text font-medium"
+                className="px-5 py-2.5 text-xs text-theme-textMuted hover:text-theme-text font-medium"
               >
                 Cancel
               </button>

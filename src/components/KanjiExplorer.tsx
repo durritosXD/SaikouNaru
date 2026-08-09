@@ -45,17 +45,17 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-extrabold text-theme-text flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-indigo-400" />
+            <Sparkles className="w-6 h-6 text-theme-primary" />
             3,000 Kanji & Koohii Explorer
           </h2>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-theme-textMuted mt-1">
             Search keywords, meanings, readings, or RTK numbers.
           </p>
         </div>
 
         {/* Search Bar */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-theme-textMuted absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
@@ -66,7 +66,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-theme-text"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-textMuted hover:text-theme-text"
             >
               <X className="w-4 h-4" />
             </button>
@@ -76,7 +76,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
 
       {/* JLPT Level Tabs */}
       <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-        <Filter className="w-4 h-4 text-gray-400 shrink-0" />
+        <Filter className="w-4 h-4 text-theme-textMuted shrink-0" />
         {jlptTabs.map((lvl) => (
           <button
             key={lvl}
@@ -84,13 +84,13 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             className={`px-4 py-1.5 rounded-xl font-bold text-xs transition ${
               selectedJlpt === lvl
                 ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-theme-text shadow-md'
-                : 'bg-slate-900 border border-slate-800 text-gray-400 hover:text-theme-text hover:bg-slate-800'
+                : 'bg-slate-900 border border-slate-800 text-theme-textMuted hover:text-theme-text hover:bg-slate-800'
             }`}
           >
             {lvl === 'ALL' ? 'All Kanji (3,000)' : lvl}
           </button>
         ))}
-        <span className="text-xs text-gray-500 ml-auto">
+        <span className="text-xs text-theme-textMuted ml-auto">
           Showing {filteredCards.length} kanji
         </span>
       </div>
@@ -103,7 +103,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             onClick={() => setSelectedCard(card)}
             className="group bg-slate-900/80 hover:bg-slate-800/90 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-4 cursor-pointer transition transform hover:-translate-y-1 flex flex-col items-center justify-between text-center relative overflow-hidden"
           >
-            <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-indigo-400 border border-indigo-500/20">
+            <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-theme-primary border border-indigo-500/20">
               {card.jlpt}
             </span>
             <span className="text-4xl font-jp font-bold text-theme-text group-hover:scale-110 transition my-2">
@@ -112,13 +112,13 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             <span className="text-xs font-semibold text-indigo-300 truncate w-full">
               {card.keyword}
             </span>
-            <span className="text-[10px] text-gray-500 mt-1">RTK #{card.rtkNum}</span>
+            <span className="text-[10px] text-theme-textMuted mt-1">RTK #{card.rtkNum}</span>
           </div>
         ))}
       </div>
 
       {filteredCards.length > 120 && (
-        <p className="text-center text-xs text-gray-500 mt-6">
+        <p className="text-center text-xs text-theme-textMuted mt-6">
           Showing first 120 matches. Refine your search to see specific Kanji.
         </p>
       )}
@@ -129,7 +129,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
           <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh] relative">
             <button
               onClick={() => setSelectedCard(null)}
-              className="absolute top-6 right-6 p-1.5 text-gray-400 hover:text-theme-text hover:bg-slate-800 rounded-xl transition"
+              className="absolute top-6 right-6 p-1.5 text-theme-textMuted hover:text-theme-text hover:bg-slate-800 rounded-xl transition"
             >
               <X className="w-5 h-5" />
             </button>
@@ -143,7 +143,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
                 <h2 className="text-2xl font-extrabold text-indigo-300 mt-1">
                   {selectedCard.keyword}
                 </h2>
-                <p className="text-xs text-gray-400">{selectedCard.meaning}</p>
+                <p className="text-xs text-theme-textMuted">{selectedCard.meaning}</p>
                 <button
                   onClick={() => playAudio(selectedCard.kanji)}
                   className="mt-2 flex items-center gap-1.5 px-3 py-1 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 rounded-lg text-xs font-semibold transition"
@@ -157,18 +157,18 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             {/* Readings */}
             <div className="grid grid-cols-2 gap-4 mt-6 p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400 block mb-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-theme-primary block mb-1">
                   Onyomi (音読み)
                 </span>
-                <span className="text-sm font-semibold text-gray-200">
+                <span className="text-sm font-semibold text-theme-text">
                   {selectedCard.onyomi || 'N/A'}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-theme-primary block mb-1">
                   Kunyomi (訓読み)
                 </span>
-                <span className="text-sm font-semibold text-gray-200">
+                <span className="text-sm font-semibold text-theme-text">
                   {selectedCard.kunyomi || 'N/A'}
                 </span>
               </div>
@@ -177,7 +177,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             {/* Stroke GIF */}
             {selectedCard.strokeGif && (
               <div className="mt-4 p-4 bg-slate-950/60 border border-slate-800 rounded-2xl flex flex-col items-center">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-theme-textMuted mb-2">
                   Stroke Animation
                 </span>
                 <img
@@ -192,18 +192,18 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             {/* Koohii Stories */}
             {(selectedCard.koohii1 || selectedCard.koohii2) && (
               <div className="mt-4 p-4 bg-slate-950/80 border border-indigo-500/20 rounded-2xl space-y-3">
-                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider block">
+                <span className="text-xs font-bold text-theme-primary uppercase tracking-wider block">
                   Koohii Mnemonics
                 </span>
                 {selectedCard.koohii1 && (
                   <div
-                    className="text-xs text-gray-300 leading-relaxed"
+                    className="text-xs text-theme-text leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: selectedCard.koohii1 }}
                   />
                 )}
                 {selectedCard.koohii2 && (
                   <div
-                    className="text-xs text-gray-400 leading-relaxed border-t border-slate-800 pt-2"
+                    className="text-xs text-theme-textMuted leading-relaxed border-t border-slate-800 pt-2"
                     dangerouslySetInnerHTML={{ __html: selectedCard.koohii2 }}
                   />
                 )}
