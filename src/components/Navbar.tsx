@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'home'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <Layers className="w-4 h-4" />
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'study'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -95,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'grammarVocab'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-indigo-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-indigo-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <Sparkles className="w-4 h-4 text-indigo-400" />
@@ -106,10 +106,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'dictionary'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-[#FF0033]" />
+            <Sparkles className="w-4 h-4 text-theme-primary" />
             JMdict & Revision
           </button>
           <button
@@ -117,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'canvas'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <PenTool className="w-4 h-4" />
@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'explorer'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -139,7 +139,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'analytics'
                 ? 'bg-white text-black font-bold shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
@@ -150,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Instance Selector & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Streak Badge */}
-          <div className="flex items-center gap-1 px-2.5 py-1.5 bg-[#121212] border border-[#262626] text-amber-400 rounded-xl text-xs font-mono font-bold">
+          <div className="flex items-center gap-1 px-2.5 py-1.5 bg-theme-card border border-theme-border text-amber-400 rounded-xl text-xs font-mono font-bold">
             <Flame className="w-3.5 h-3.5 fill-amber-400" />
             <span>{streak}<span className="hidden sm:inline"> Day Streak</span></span>
           </div>
@@ -159,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#121212] hover:bg-[#1A1A1A] border border-[#262626] rounded-xl text-xs font-medium text-white transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-theme-card hover:bg-theme-surface border border-theme-border rounded-xl text-xs font-medium text-theme-text transition"
             >
               <Layers className="w-3.5 h-3.5 text-gray-400" />
               <span className="max-w-[90px] sm:max-w-[130px] truncate font-semibold text-[11px] sm:text-xs">
@@ -169,7 +169,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-[85vw] sm:w-64 max-w-xs bg-[#121212] border border-[#262626] rounded-2xl shadow-2xl p-2 z-50 animate-fade-in">
+              <div className="absolute right-0 mt-2 w-[85vw] sm:w-64 max-w-xs bg-theme-card border border-theme-border rounded-2xl shadow-2xl p-2 z-50 animate-fade-in">
                 <div className="px-3 py-2 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider">
                   Active Deck Instance
                 </div>
@@ -185,7 +185,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between transition ${
                         activeInstance?.id === inst.id
                           ? 'bg-white text-black font-bold'
-                          : 'text-gray-300 hover:bg-[#1A1A1A]'
+                          : 'text-gray-300 hover:bg-theme-surface'
                       }`}
                     >
                       <span className="truncate">{inst.name}</span>
@@ -196,14 +196,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   ))}
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-[#262626] space-y-1">
+                <div className="mt-2 pt-2 border-t border-theme-border space-y-1">
                   {activeInstance && (
                     <button
                       onClick={() => {
                         setDropdownOpen(false);
                         onOpenEditInstance();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-gray-300 hover:bg-[#1A1A1A] flex items-center gap-2"
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-gray-300 hover:bg-theme-surface flex items-center gap-2"
                     >
                       <Settings className="w-3.5 h-3.5 text-gray-400" />
                       Configure Current Instance
@@ -214,9 +214,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setDropdownOpen(false);
                       onOpenCreateInstance();
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-white hover:bg-[#1A1A1A] flex items-center gap-2"
+                    className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-theme-text hover:bg-theme-surface flex items-center gap-2"
                   >
-                    <Plus className="w-3.5 h-3.5 text-[#FF0033]" />
+                    <Plus className="w-3.5 h-3.5 text-theme-primary" />
                     Create New Instance
                   </button>
                 </div>

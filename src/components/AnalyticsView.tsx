@@ -71,7 +71,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
       <div>
-        <h2 className="text-2xl font-extrabold text-white flex items-center gap-2">
+        <h2 className="text-2xl font-extrabold text-theme-text flex items-center gap-2">
           <BarChart3 className="w-6 h-6 text-indigo-400" />
           SRS Analytics & JLPT Mastery
         </h2>
@@ -87,7 +87,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <Flame className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-2xl font-extrabold text-white">{streak} Days</span>
+            <span className="text-2xl font-extrabold text-theme-text">{streak} Days</span>
             <span className="text-xs text-gray-400 block font-medium">Active Daily Streak</span>
           </div>
         </div>
@@ -97,7 +97,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <Trophy className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-2xl font-extrabold text-white">{totalReviewsCount}</span>
+            <span className="text-2xl font-extrabold text-theme-text">{totalReviewsCount}</span>
             <span className="text-xs text-gray-400 block font-medium">Total Reviews Passed</span>
           </div>
         </div>
@@ -107,7 +107,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-2xl font-extrabold text-white">{accuracy}%</span>
+            <span className="text-2xl font-extrabold text-theme-text">{accuracy}%</span>
             <span className="text-xs text-gray-400 block font-medium">Recall Retention Accuracy</span>
           </div>
         </div>
@@ -117,7 +117,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <Layers className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-2xl font-extrabold text-white">{srsRecords.size}</span>
+            <span className="text-2xl font-extrabold text-theme-text">{srsRecords.size}</span>
             <span className="text-xs text-gray-400 block font-medium">Cards in SRS Queue</span>
           </div>
         </div>
@@ -125,7 +125,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 
       {/* JLPT Progress Bars */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+        <h3 className="text-lg font-bold text-theme-text flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-indigo-400" />
           JLPT Mastery Breakdown
         </h3>
@@ -134,7 +134,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           {levelStats.map((st) => (
             <div key={st.level} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-white flex items-center gap-2">
+                <span className="font-bold text-theme-text flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                     JLPT {st.level}
                   </span>
@@ -156,7 +156,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 
       {/* 28-Day Study Heatmap Grid */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+        <h3 className="text-lg font-bold text-theme-text flex items-center gap-2">
           <Calendar className="w-5 h-5 text-indigo-400" />
           4-Week Activity Heatmap
         </h3>
@@ -166,7 +166,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <div
               key={day.dateStr}
               title={`${day.dateStr}: ${day.count} reviews`}
-              className={`h-10 rounded-xl flex items-center justify-center text-[10px] font-bold text-white/80 transition transform hover:scale-110 ${day.intensity}`}
+              className={`h-10 rounded-xl flex items-center justify-center text-[10px] font-bold text-theme-text/80 transition transform hover:scale-110 ${day.intensity}`}
             >
               {day.count > 0 ? day.count : ''}
             </div>

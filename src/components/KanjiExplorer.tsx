@@ -44,7 +44,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-extrabold text-white flex items-center gap-2">
+          <h2 className="text-2xl font-extrabold text-theme-text flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-indigo-400" />
             3,000 Kanji & Koohii Explorer
           </h2>
@@ -61,12 +61,12 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search Kanji, keyword, reading, RTK #..."
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-2xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500 transition"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-2xl text-theme-text placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500 transition"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-theme-text"
             >
               <X className="w-4 h-4" />
             </button>
@@ -83,8 +83,8 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             onClick={() => setSelectedJlpt(lvl)}
             className={`px-4 py-1.5 rounded-xl font-bold text-xs transition ${
               selectedJlpt === lvl
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'bg-slate-900 border border-slate-800 text-gray-400 hover:text-white hover:bg-slate-800'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-theme-text shadow-md'
+                : 'bg-slate-900 border border-slate-800 text-gray-400 hover:text-theme-text hover:bg-slate-800'
             }`}
           >
             {lvl === 'ALL' ? 'All Kanji (3,000)' : lvl}
@@ -106,7 +106,7 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
             <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-indigo-400 border border-indigo-500/20">
               {card.jlpt}
             </span>
-            <span className="text-4xl font-jp font-bold text-white group-hover:scale-110 transition my-2">
+            <span className="text-4xl font-jp font-bold text-theme-text group-hover:scale-110 transition my-2">
               {card.kanji}
             </span>
             <span className="text-xs font-semibold text-indigo-300 truncate w-full">
@@ -129,13 +129,13 @@ export const KanjiExplorer: React.FC<KanjiExplorerProps> = ({ cards }) => {
           <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh] relative">
             <button
               onClick={() => setSelectedCard(null)}
-              className="absolute top-6 right-6 p-1.5 text-gray-400 hover:text-white hover:bg-slate-800 rounded-xl transition"
+              className="absolute top-6 right-6 p-1.5 text-gray-400 hover:text-theme-text hover:bg-slate-800 rounded-xl transition"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-6">
-              <h1 className="text-7xl font-jp font-bold text-white">{selectedCard.kanji}</h1>
+              <h1 className="text-7xl font-jp font-bold text-theme-text">{selectedCard.kanji}</h1>
               <div>
                 <span className="px-2 py-0.5 text-xs font-bold bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 rounded-lg">
                   JLPT {selectedCard.jlpt} • RTK #{selectedCard.rtkNum}

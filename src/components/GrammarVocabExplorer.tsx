@@ -83,7 +83,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#262626] mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-theme-border mb-8">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-1 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
@@ -94,7 +94,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
               8,398 Vocab • 287 Grammar
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold text-theme-text tracking-tight">
             Grammar & Vocab Explorer
           </h1>
           <p className="text-sm text-gray-400 mt-1">
@@ -103,7 +103,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
         </div>
 
         {/* Level Selector / Omitter Badges */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-[#121212] p-2 rounded-2xl border border-[#262626]">
+        <div className="flex flex-wrap items-center gap-1.5 bg-theme-card p-2 rounded-2xl border border-theme-border">
           <span className="text-[10px] font-mono uppercase text-gray-400 font-bold px-2 flex items-center gap-1">
             <Filter className="w-3 h-3 text-indigo-400" /> Levels:
           </span>
@@ -116,7 +116,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                 className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-1 ${
                   isSelected
                     ? 'bg-white text-black shadow'
-                    : 'bg-[#1A1A1A] text-gray-500 border border-[#262626] hover:text-gray-300'
+                    : 'bg-theme-surface text-gray-500 border border-theme-border hover:text-gray-300'
                 }`}
                 title={isSelected ? `Studying ${lvl} (Click to omit)` : `Omitted ${lvl} (Click to study)`}
               >
@@ -130,13 +130,13 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
 
       {/* Category Pills & Search Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 bg-[#121212] p-1.5 rounded-2xl border border-[#262626] w-full sm:w-auto">
+        <div className="flex items-center gap-2 bg-theme-card p-1.5 rounded-2xl border border-theme-border w-full sm:w-auto">
           <button
             onClick={() => setSelectedCategory('all')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
               selectedCategory === 'all'
                 ? 'bg-white text-black shadow'
-                : 'text-gray-400 hover:text-white'
+                : 'text-gray-400 hover:text-theme-text'
             }`}
           >
             All Items ({filteredCards.length})
@@ -146,7 +146,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
               selectedCategory === 'vocab'
                 ? 'bg-white text-black shadow'
-                : 'text-gray-400 hover:text-white'
+                : 'text-gray-400 hover:text-theme-text'
             }`}
           >
             Vocabulary Only
@@ -156,7 +156,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
               selectedCategory === 'grammar'
                 ? 'bg-white text-black shadow'
-                : 'text-gray-400 hover:text-white'
+                : 'text-gray-400 hover:text-theme-text'
             }`}
           >
             Grammar Points
@@ -170,12 +170,12 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
             placeholder="Search reading, kanji, meaning..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#121212] border border-[#262626] focus:border-indigo-500 text-white placeholder-gray-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs font-medium outline-none transition"
+            className="w-full bg-theme-card border border-theme-border focus:border-indigo-500 text-theme-text placeholder-gray-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs font-medium outline-none transition"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-theme-text text-xs"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -197,7 +197,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                 setSelectedCard(card);
                 setActiveForm('root');
               }}
-              className="bg-[#121212] border border-[#262626] hover:border-indigo-500/50 p-4 rounded-2xl flex flex-col justify-between cursor-pointer transition hover:scale-[1.01] group relative"
+              className="bg-theme-card border border-theme-border hover:border-indigo-500/50 p-4 rounded-2xl flex flex-col justify-between cursor-pointer transition hover:scale-[1.01] group relative"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
@@ -210,14 +210,14 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                   >
                     {isVocab ? 'VOCAB' : 'GRAMMAR'}
                   </span>
-                  <span className="text-[10px] font-mono font-bold text-gray-400 bg-[#1A1A1A] px-2 py-0.5 rounded border border-[#262626]">
+                  <span className="text-[10px] font-mono font-bold text-gray-400 bg-theme-surface px-2 py-0.5 rounded border border-theme-border">
                     JLPT {card.jlpt}
                   </span>
                 </div>
 
                 {isVocab ? (
                   <div>
-                    <h3 className="text-2xl font-bold font-jp text-white group-hover:text-indigo-300 transition">
+                    <h3 className="text-2xl font-bold font-jp text-theme-text group-hover:text-indigo-300 transition">
                       {vocab.kanji || vocab.reading}
                     </h3>
                     {vocab.kanji && (
@@ -238,7 +238,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                 )}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#262626] flex items-center justify-between text-[11px] text-gray-400 group-hover:text-white transition">
+              <div className="mt-4 pt-3 border-t border-theme-border flex items-center justify-between text-[11px] text-gray-400 group-hover:text-theme-text transition">
                 <span>View detail & conjugations</span>
                 <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
               </div>
@@ -256,10 +256,10 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
       {/* Detail Modal with Backside Conjugation Toggles & Furigana Sentences */}
       {selectedCard && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-[#121212] border border-[#262626] rounded-3xl max-w-xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-theme-card border border-theme-border rounded-3xl max-w-xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <button
               onClick={() => setSelectedCard(null)}
-              className="absolute top-4 right-4 p-2 rounded-xl bg-[#1A1A1A] text-gray-400 hover:text-white border border-[#262626]"
+              className="absolute top-4 right-4 p-2 rounded-xl bg-theme-surface text-gray-400 hover:text-theme-text border border-theme-border"
             >
               <X className="w-4 h-4" />
             </button>
@@ -275,7 +275,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
               >
                 {selectedCard.type === 'vocab' ? 'VOCABULARY' : 'GRAMMAR POINT'}
               </span>
-              <span className="text-xs font-mono font-bold text-gray-400 bg-[#1A1A1A] px-2.5 py-1 rounded-xl border border-[#262626]">
+              <span className="text-xs font-mono font-bold text-gray-400 bg-theme-surface px-2.5 py-1 rounded-xl border border-theme-border">
                 JLPT {selectedCard.jlpt}
               </span>
             </div>
@@ -294,12 +294,12 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                 return (
                   <div>
                     <div className="flex items-center justify-between">
-                      <h2 className="text-4xl font-extrabold font-jp text-white">
+                      <h2 className="text-4xl font-extrabold font-jp text-theme-text">
                         {activeFormVal.text}
                       </h2>
                       <button
                         onClick={() => playAudio(activeFormVal.text)}
-                        className="p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl text-indigo-400 hover:text-white transition"
+                        className="p-3 bg-theme-surface border border-theme-border rounded-2xl text-indigo-400 hover:text-theme-text transition"
                         title="Listen Japanese Speech"
                       >
                         <Volume2 className="w-5 h-5" />
@@ -312,7 +312,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                       </p>
                     )}
 
-                    <div className="mt-4 p-4 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                    <div className="mt-4 p-4 bg-theme-surface border border-theme-border rounded-2xl">
                       <span className="text-[10px] font-mono uppercase font-bold text-gray-400 block mb-1">
                         English Meaning
                       </span>
@@ -335,7 +335,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                               className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
                                 isSelected
                                   ? 'bg-white text-black border-white shadow-lg'
-                                  : 'bg-[#121212] text-gray-400 border-[#262626] hover:text-white hover:bg-[#1A1A1A]'
+                                  : 'bg-theme-card text-gray-400 border-theme-border hover:text-theme-text hover:bg-theme-surface'
                               }`}
                             >
                               <span>{conf.label}</span>
@@ -359,14 +359,14 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                       </h2>
                       <button
                         onClick={() => playAudio(grammar.title)}
-                        className="p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl text-amber-400 hover:text-white transition"
+                        className="p-3 bg-theme-surface border border-theme-border rounded-2xl text-amber-400 hover:text-theme-text transition"
                       >
                         <Volume2 className="w-5 h-5" />
                       </button>
                     </div>
 
                     {/* Structure / Attachment */}
-                    <div className="mt-4 p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                    <div className="mt-4 p-3 bg-theme-surface border border-theme-border rounded-2xl">
                       <span className="text-[10px] font-mono uppercase text-amber-400 font-bold block mb-1">
                         Connection Rule / Structure
                       </span>
@@ -374,7 +374,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                     </div>
 
                     {/* Nuances Explanation */}
-                    <div className="mt-4 p-4 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                    <div className="mt-4 p-4 bg-theme-surface border border-theme-border rounded-2xl">
                       <span className="text-[10px] font-mono uppercase text-indigo-400 font-bold block mb-1 flex items-center gap-1">
                         <Info className="w-3 h-3" /> Grammar Nuances & Usage Context
                       </span>
@@ -390,7 +390,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                         {grammar.sampleSentences.map((sample, idx) => (
                           <div
                             key={idx}
-                            className="p-3 bg.black/40 bg-[#121212] border border-[#262626] rounded-2xl flex items-start justify-between gap-3"
+                            className="p-3 bg.black/40 bg-theme-card border border-theme-border rounded-2xl flex items-start justify-between gap-3"
                           >
                             <div>
                               <p className="text-sm font-jp font-medium text-emerald-300 tracking-wide">
@@ -400,7 +400,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                             </div>
                             <button
                               onClick={() => playAudio(sample.furigana)}
-                              className="p-2 bg-[#1A1A1A] border border-[#262626] rounded-xl text-gray-400 hover:text-white shrink-0"
+                              className="p-2 bg-theme-surface border border-theme-border rounded-xl text-gray-400 hover:text-theme-text shrink-0"
                             >
                               <Volume2 className="w-3.5 h-3.5" />
                             </button>
@@ -426,7 +426,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                               className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
                                 isSelected
                                   ? 'bg-white text-black border-white shadow-lg'
-                                  : 'bg-[#121212] text-gray-400 border-[#262626] hover:text-white hover:bg-[#1A1A1A]'
+                                  : 'bg-theme-card text-gray-400 border-theme-border hover:text-theme-text hover:bg-theme-surface'
                               }`}
                             >
                               <span>{conf.label}</span>
@@ -436,7 +436,7 @@ export const GrammarVocabExplorer: React.FC<GrammarVocabExplorerProps> = ({ card
                         })}
                       </div>
                       {grammar.conjugations && (
-                        <div className="mt-2 text-center text-xs font-jp text-indigo-300 p-2 bg-[#1A1A1A] rounded-xl border border-[#262626]">
+                        <div className="mt-2 text-center text-xs font-jp text-indigo-300 p-2 bg-theme-surface rounded-xl border border-theme-border">
                           Form Rule: {grammar.conjugations[activeForm]}
                         </div>
                       )}

@@ -93,14 +93,14 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-2xl bg-[#121212] border border-[#262626] rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
-        <div className="flex items-center justify-between pb-4 border-b border-[#262626]">
+      <div className="w-full max-w-2xl bg-theme-card border border-theme-border rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div className="flex items-center justify-between pb-4 border-b border-theme-border">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white">
+            <div className="p-2.5 bg-theme-surface border border-theme-border rounded-xl text-theme-text">
               <Settings className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-bold text-xl text-white">
+              <h3 className="font-bold text-xl text-theme-text">
                 {instanceToEdit ? 'Configure Study Instance' : 'Create New Deck Instance'}
               </h3>
               <p className="text-xs text-gray-400">
@@ -110,7 +110,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-xl text-gray-400 hover:text-white hover:bg-[#262626] transition"
+            className="p-1 rounded-xl text-gray-400 hover:text-theme-text hover:bg-theme-border transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -128,7 +128,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white text-sm transition"
+                className="w-full px-4 py-3 bg-theme-surface border border-theme-border rounded-xl text-theme-text placeholder-gray-500 focus:outline-none focus:border-white text-sm transition"
                 placeholder="e.g., N5 & N4 Core Vocab & Grammar"
               />
             </div>
@@ -140,7 +140,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white text-sm transition"
+                className="w-full px-4 py-3 bg-theme-surface border border-theme-border rounded-xl text-theme-text placeholder-gray-500 focus:outline-none focus:border-white text-sm transition"
                 placeholder="Brief summary of study targets..."
               />
             </div>
@@ -166,7 +166,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                     className={`py-3 rounded-2xl font-bold text-xs border flex flex-col items-center justify-center gap-1 transition ${
                       isSelected
                         ? 'bg-white border-white text-black font-bold shadow-lg'
-                        : 'bg-[#1A1A1A] border-[#262626] text-gray-400 hover:bg-[#262626] hover:text-white'
+                        : 'bg-theme-surface border-theme-border text-gray-400 hover:bg-theme-border hover:text-theme-text'
                     }`}
                   >
                     <span>{label}</span>
@@ -193,7 +193,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                     className={`py-3 rounded-2xl font-bold text-sm border flex flex-col items-center justify-center gap-1 transition ${
                       isSelected
                         ? 'bg-white border-white text-black font-bold shadow-lg'
-                        : 'bg-[#1A1A1A] border-[#262626] text-gray-400 hover:bg-[#262626] hover:text-white'
+                        : 'bg-theme-surface border-theme-border text-gray-400 hover:bg-theme-border hover:text-theme-text'
                     }`}
                   >
                     <span>{lvl}</span>
@@ -203,7 +203,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
               })}
             </div>
             <p className="text-xs text-gray-400 mt-2 font-mono">
-              Selected levels: <span className="text-white font-bold">{selectedLevels.join(', ')}</span>
+              Selected levels: <span className="text-theme-text font-bold">{selectedLevels.join(', ')}</span>
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 max="200"
                 value={dailyNewLimit}
                 onChange={(e) => setDailyNewLimit(Number(e.target.value))}
-                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-sm focus:outline-none focus:border-white"
+                className="w-full px-4 py-3 bg-theme-surface border border-theme-border rounded-xl text-theme-text text-sm focus:outline-none focus:border-white"
               />
             </div>
             <div>
@@ -232,13 +232,13 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 max="1000"
                 value={dailyReviewLimit}
                 onChange={(e) => setDailyReviewLimit(Number(e.target.value))}
-                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-sm focus:outline-none focus:border-white"
+                className="w-full px-4 py-3 bg-theme-surface border border-theme-border rounded-xl text-theme-text text-sm focus:outline-none focus:border-white"
               />
             </div>
           </div>
 
           {/* Buttons Bar */}
-          <div className="flex items-center justify-between pt-4 border-t border-[#262626]">
+          <div className="flex items-center justify-between pt-4 border-t border-theme-border">
             <div>
               {instanceToEdit && onDelete && (
                 <button
@@ -260,7 +260,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 text-xs text-gray-400 hover:text-white font-medium"
+                className="px-5 py-2.5 text-xs text-gray-400 hover:text-theme-text font-medium"
               >
                 Cancel
               </button>

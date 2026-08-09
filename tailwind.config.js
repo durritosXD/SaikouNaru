@@ -36,11 +36,17 @@ export default {
       animation: {
         'card-flip': 'flip 0.6s ease-in-out',
         'pulse-glow': 'pulseGlow 2s infinite',
+        'float': 'float 15s ease-in infinite',
       },
       keyframes: {
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 0 15px rgba(99, 102, 241, 0.4)' },
           '50%': { boxShadow: '0 0 30px rgba(99, 102, 241, 0.8)' },
+        },
+        float: {
+          '0%': { transform: 'translateY(0) scale(1)' },
+          '50%': { transform: 'translateY(-50vh) scale(1.2)' },
+          '100%': { transform: 'translateY(-100vh) scale(1)' },
         }
       }
     },

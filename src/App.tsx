@@ -146,8 +146,8 @@ export const App: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
-        <div className="w-12 h-12 border-4 border-[#262626] border-t-white rounded-full animate-spin mb-4" />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-theme-bg text-theme-text p-6">
+        <div className="w-12 h-12 border-4 border-theme-border border-t-white rounded-full animate-spin mb-4" />
         <h2 className="text-xl font-mono font-bold tracking-wider">Loading SaikouNaru...</h2>
         <p className="text-xs text-gray-500 mt-1 font-jp">最高成 Japanese SRS Studio</p>
       </div>
@@ -201,6 +201,7 @@ export const App: React.FC = () => {
             }}
             onDeleteInstance={handleDeleteInstance}
             streak={streak}
+            theme={theme}
           />
         )}
 

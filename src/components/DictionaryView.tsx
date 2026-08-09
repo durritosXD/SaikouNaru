@@ -125,14 +125,14 @@ export const DictionaryView: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
       {/* Nothing OS Header Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121212] p-2 rounded-3xl border border-[#262626]">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-theme-card p-2 rounded-3xl border border-theme-border">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTab('search')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-mono text-xs font-bold transition ${
               activeTab === 'search'
                 ? 'bg-white text-black shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -144,7 +144,7 @@ export const DictionaryView: React.FC = () => {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-mono text-xs font-bold transition ${
               activeTab === 'translate'
                 ? 'bg-white text-black shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
             <Languages className="w-4 h-4" />
@@ -156,15 +156,15 @@ export const DictionaryView: React.FC = () => {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-mono text-xs font-bold transition ${
               activeTab === 'revision'
                 ? 'bg-white text-black shadow'
-                : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                : 'text-gray-400 hover:text-theme-text hover:bg-theme-surface'
             }`}
           >
-            <Bookmark className="w-4 h-4 text-[#FF0033]" />
+            <Bookmark className="w-4 h-4 text-theme-primary" />
             Revision List ({revisionList.length})
           </button>
         </div>
 
-        <div className="px-3 py-1 bg-[#1A1A1A] border border-[#262626] rounded-xl text-[11px] font-mono text-gray-400">
+        <div className="px-3 py-1 bg-theme-surface border border-theme-border rounded-xl text-[11px] font-mono text-gray-400">
           Hiragana Priority Mode
         </div>
       </div>
@@ -180,15 +180,15 @@ export const DictionaryView: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search English word (e.g. 'dog'), Romaji ('inu'), or Hiragana ('いぬ')..."
-              className="w-full pl-12 pr-4 py-3.5 bg-[#121212] border border-[#262626] focus:border-white rounded-2xl text-white placeholder-gray-500 font-mono text-sm focus:outline-none transition shadow-xl"
+              className="w-full pl-12 pr-4 py-3.5 bg-theme-card border border-theme-border focus:border-white rounded-2xl text-theme-text placeholder-gray-500 font-mono text-sm focus:outline-none transition shadow-xl"
             />
           </div>
 
           {/* Dictionary Results Grid - Hiragana First */}
           {searchResults.length === 0 ? (
-            <div className="bg-[#121212] border border-[#262626] rounded-3xl p-12 text-center space-y-3">
+            <div className="bg-theme-card border border-theme-border rounded-3xl p-12 text-center space-y-3">
               <Search className="w-10 h-10 text-gray-500 mx-auto" />
-              <h3 className="text-xl font-mono font-bold text-white">Search Japanese Dictionary</h3>
+              <h3 className="text-xl font-mono font-bold text-theme-text">Search Japanese Dictionary</h3>
               <p className="text-xs text-gray-400 max-w-sm mx-auto font-mono">
                 Type an English word (e.g., "dog", "school", "eat"), Romaji ("inu"), or Hiragana ("いぬ") above to look up definitions.
               </p>
@@ -200,19 +200,19 @@ export const DictionaryView: React.FC = () => {
                 return (
                   <div
                     key={entry.id}
-                    className="bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
+                    className="bg-theme-card hover:bg-[#181818] border border-theme-border hover:border-theme-borderLight rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
                   >
                     <div>
                       {/* Header Badges */}
                       <div className="flex items-center justify-between gap-2 mb-3">
                         <div className="flex items-center gap-1.5 font-mono">
                           {entry.jlpt && (
-                            <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-white border border-[#262626]">
+                            <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-theme-surface text-theme-text border border-theme-border">
                               {entry.jlpt}
                             </span>
                           )}
                           {entry.japanese !== entry.hiragana && (
-                            <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#1A1A1A] text-gray-400 border border-[#262626]">
+                            <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-theme-surface text-gray-400 border border-theme-border">
                               Kanji: {entry.japanese}
                             </span>
                           )}
@@ -220,7 +220,7 @@ export const DictionaryView: React.FC = () => {
 
                         <button
                           onClick={() => playAudio(entry.hiragana || entry.japanese)}
-                          className="p-1.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-gray-400 hover:text-white transition"
+                          className="p-1.5 rounded-xl bg-theme-surface hover:bg-theme-border text-gray-400 hover:text-theme-text transition"
                           title="Listen Audio"
                         >
                           <Volume2 className="w-3.5 h-3.5" />
@@ -229,7 +229,7 @@ export const DictionaryView: React.FC = () => {
 
                       {/* Primary Heading: Pure HIRAGANA + Romaji */}
                       <div className="space-y-1">
-                        <h3 className="text-3xl font-jp font-bold text-white tracking-wide">
+                        <h3 className="text-3xl font-jp font-bold text-theme-text tracking-wide">
                           {entry.hiragana || entry.reading}
                         </h3>
                         <p className="text-xs font-mono text-indigo-400">{entry.romaji}</p>
@@ -242,7 +242,7 @@ export const DictionaryView: React.FC = () => {
 
                       {/* Sample Words */}
                       {entry.sampleWords && entry.sampleWords.length > 0 && (
-                        <div className="mt-3 text-[11px] text-gray-400 border-t border-[#262626] pt-2 space-y-1">
+                        <div className="mt-3 text-[11px] text-gray-400 border-t border-theme-border pt-2 space-y-1">
                           {entry.sampleWords.map((sample, idx) => (
                             <div key={idx} dangerouslySetInnerHTML={{ __html: sample }} />
                           ))}
@@ -274,7 +274,7 @@ export const DictionaryView: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <Plus className="w-4 h-4 text-[#FF0033]" /> Add to Revision List
+                          <Plus className="w-4 h-4 text-theme-primary" /> Add to Revision List
                         </>
                       )}
                     </button>
@@ -290,7 +290,7 @@ export const DictionaryView: React.FC = () => {
       {activeTab === 'translate' && (
         <div className="space-y-6">
           <form onSubmit={handleTranslate} className="space-y-4">
-            <div className="bg-[#121212] border border-[#262626] rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="bg-theme-card border border-theme-border rounded-3xl p-6 shadow-2xl space-y-4">
               <label className="block text-xs font-mono uppercase tracking-wider text-gray-300 font-bold">
                 Paste English or Japanese Sentence
               </label>
@@ -299,7 +299,7 @@ export const DictionaryView: React.FC = () => {
                 value={sentenceInput}
                 onChange={(e) => setSentenceInput(e.target.value)}
                 placeholder="Paste sentence, e.g.: 'I love dogs' or 'I study Japanese at school'..."
-                className="w-full p-4 bg-[#1A1A1A] border border-[#262626] focus:border-white rounded-2xl text-white placeholder-gray-500 text-sm focus:outline-none transition resize-none font-mono"
+                className="w-full p-4 bg-theme-surface border border-theme-border focus:border-white rounded-2xl text-theme-text placeholder-gray-500 text-sm focus:outline-none transition resize-none font-mono"
               />
 
               <div className="flex items-center justify-between">
@@ -329,16 +329,16 @@ export const DictionaryView: React.FC = () => {
           {translationResult && (
             <div className="space-y-6 animate-fade-in">
               {/* Pure Hiragana Translation Box */}
-              <div className="bg-[#121212] border border-[#262626] rounded-3xl p-6 shadow-2xl space-y-3">
+              <div className="bg-theme-card border border-theme-border rounded-3xl p-6 shadow-2xl space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold uppercase text-emerald-400 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-[#FF0033]" /> Pure Hiragana Translation (No Kanji)
+                    <Sparkles className="w-4 h-4 text-theme-primary" /> Pure Hiragana Translation (No Kanji)
                   </span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setShowKanjiSubtitle(!showKanjiSubtitle)}
-                      className="px-3 py-1.5 bg-[#1A1A1A] hover:bg-[#262626] border border-[#262626] text-gray-300 text-xs font-mono rounded-xl flex items-center gap-1.5 transition"
+                      className="px-3 py-1.5 bg-theme-surface hover:bg-theme-border border border-theme-border text-gray-300 text-xs font-mono rounded-xl flex items-center gap-1.5 transition"
                     >
                       {showKanjiSubtitle ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       {showKanjiSubtitle ? 'Hide Kanji' : 'Show Kanji Subtitle'}
@@ -354,7 +354,7 @@ export const DictionaryView: React.FC = () => {
                       }
                       className="px-3.5 py-1.5 bg-white text-black hover:bg-gray-200 text-xs font-mono font-bold rounded-xl flex items-center gap-1.5 transition"
                     >
-                      <Plus className="w-3.5 h-3.5 text-[#FF0033]" /> Add Sentence to List
+                      <Plus className="w-3.5 h-3.5 text-theme-primary" /> Add Sentence to List
                     </button>
                   </div>
                 </div>
@@ -362,7 +362,7 @@ export const DictionaryView: React.FC = () => {
                 {/* Main Heading: Pure HIRAGANA Translation */}
                 <div className="flex items-center gap-4 pt-2">
                   <div>
-                    <h2 className="text-2xl sm:text-3xl font-jp font-bold text-white tracking-wider">
+                    <h2 className="text-2xl sm:text-3xl font-jp font-bold text-theme-text tracking-wider">
                       {translationResult.japaneseHiragana}
                     </h2>
                     {showKanjiSubtitle && (
@@ -373,7 +373,7 @@ export const DictionaryView: React.FC = () => {
                   </div>
                   <button
                     onClick={() => playAudio(translationResult.japaneseHiragana)}
-                    className="p-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#262626] text-indigo-400 transition"
+                    className="p-2.5 rounded-xl bg-theme-surface hover:bg-theme-border text-indigo-400 transition"
                   >
                     <Volume2 className="w-4 h-4" />
                   </button>
@@ -382,7 +382,7 @@ export const DictionaryView: React.FC = () => {
 
               {/* Hiragana Vocabulary Breakdown Tokens */}
               <div className="space-y-3">
-                <h3 className="text-lg font-mono font-bold text-white flex items-center gap-2">
+                <h3 className="text-lg font-mono font-bold text-theme-text flex items-center gap-2">
                   <Layers className="w-5 h-5 text-indigo-400" />
                   Hiragana Vocabulary Breakdown ({translationResult.tokens.length} words)
                 </h3>
@@ -394,16 +394,16 @@ export const DictionaryView: React.FC = () => {
                     return (
                       <div
                         key={idx}
-                        className="bg-[#121212] border border-[#262626] rounded-2xl p-4 shadow-lg flex flex-col justify-between"
+                        className="bg-theme-card border border-theme-border rounded-2xl p-4 shadow-lg flex flex-col justify-between"
                       >
                         <div>
                           <div className="flex items-center justify-between">
-                            <span className="text-2xl font-jp font-bold text-white">
+                            <span className="text-2xl font-jp font-bold text-theme-text">
                               {wordText}
                             </span>
                             <button
                               onClick={() => playAudio(wordText)}
-                              className="p-1 rounded bg-[#1A1A1A] text-gray-400 hover:text-white"
+                              className="p-1 rounded bg-theme-surface text-gray-400 hover:text-theme-text"
                             >
                               <Volume2 className="w-3.5 h-3.5" />
                             </button>
@@ -426,10 +426,10 @@ export const DictionaryView: React.FC = () => {
                           className={`mt-4 w-full py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition ${
                             isSaved
                               ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 cursor-default'
-                              : 'bg-[#1A1A1A] border border-[#262626] text-white hover:bg-[#262626]'
+                              : 'bg-theme-surface border border-theme-border text-theme-text hover:bg-theme-border'
                           }`}
                         >
-                          {isSaved ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5 text-[#FF0033]" />}
+                          {isSaved ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5 text-theme-primary" />}
                           {isSaved ? 'Saved' : 'Add Vocab to List'}
                         </button>
                       </div>
@@ -446,7 +446,7 @@ export const DictionaryView: React.FC = () => {
       {activeTab === 'revision' && (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-[#121212] p-4 rounded-3xl border border-[#262626]">
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-theme-card p-4 rounded-3xl border border-theme-border">
             <div className="flex flex-wrap gap-1.5 font-mono text-xs">
               {(['all', 'vocab', 'sentence', 'kanji'] as const).map((filter) => (
                 <button
@@ -455,7 +455,7 @@ export const DictionaryView: React.FC = () => {
                   className={`px-3.5 py-1.5 rounded-xl font-bold uppercase transition ${
                     revisionFilter === filter
                       ? 'bg-white text-black'
-                      : 'bg-[#1A1A1A] text-gray-400 hover:text-white border border-[#262626]'
+                      : 'bg-theme-surface text-gray-400 hover:text-theme-text border border-theme-border'
                   }`}
                 >
                   {filter} ({revisionList.filter((i) => filter === 'all' || i.type === filter).length})
@@ -468,15 +468,15 @@ export const DictionaryView: React.FC = () => {
               value={revisionQuery}
               onChange={(e) => setRevisionQuery(e.target.value)}
               placeholder="Filter saved items..."
-              className="px-4 py-2 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-xs font-mono focus:outline-none"
+              className="px-4 py-2 bg-theme-surface border border-theme-border rounded-xl text-theme-text text-xs font-mono focus:outline-none"
             />
           </div>
 
           {/* Revision Items Grid */}
           {filteredRevisionList.length === 0 ? (
-            <div className="bg-[#121212] border border-[#262626] rounded-3xl p-12 text-center space-y-3">
+            <div className="bg-theme-card border border-theme-border rounded-3xl p-12 text-center space-y-3">
               <Bookmark className="w-10 h-10 text-gray-500 mx-auto" />
-              <h3 className="text-xl font-mono font-bold text-white">No Saved Revision Items</h3>
+              <h3 className="text-xl font-mono font-bold text-theme-text">No Saved Revision Items</h3>
               <p className="text-xs text-gray-400 max-w-sm mx-auto">
                 Search Hiragana words or translate sentences to save vocabulary into your revision list.
               </p>
@@ -486,11 +486,11 @@ export const DictionaryView: React.FC = () => {
               {filteredRevisionList.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
+                  className="bg-theme-card hover:bg-[#181818] border border-theme-border hover:border-theme-borderLight rounded-3xl p-5 shadow-xl transition flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-                      <span className="px-2 py-0.5 rounded bg-[#1A1A1A] border border-[#262626] font-mono uppercase font-bold text-[10px]">
+                      <span className="px-2 py-0.5 rounded bg-theme-surface border border-theme-border font-mono uppercase font-bold text-[10px]">
                         {item.type}
                       </span>
                       <span className="font-mono text-[10px] text-gray-500">
@@ -498,15 +498,15 @@ export const DictionaryView: React.FC = () => {
                       </span>
                     </div>
 
-                    <h4 className="text-2xl font-jp font-bold text-white">{item.japanese}</h4>
+                    <h4 className="text-2xl font-jp font-bold text-theme-text">{item.japanese}</h4>
                     <p className="text-xs font-mono text-indigo-400 mt-0.5">{item.reading}</p>
                     <p className="text-xs text-gray-300 mt-2 leading-relaxed">{item.english}</p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#262626] flex items-center justify-between">
+                  <div className="mt-4 pt-3 border-t border-theme-border flex items-center justify-between">
                     <button
                       onClick={() => playAudio(item.japanese)}
-                      className="p-1.5 rounded-xl bg-[#1A1A1A] text-gray-400 hover:text-white transition"
+                      className="p-1.5 rounded-xl bg-theme-surface text-gray-400 hover:text-theme-text transition"
                       title="Audio"
                     >
                       <Volume2 className="w-4 h-4" />

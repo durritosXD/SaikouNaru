@@ -79,7 +79,7 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-extrabold text-white flex items-center justify-center gap-2">
+        <h2 className="text-2xl font-extrabold text-theme-text flex items-center justify-center gap-2">
           <Sparkles className="w-6 h-6 text-indigo-400" />
           Kanji Stroke Drawing Studio
         </h2>
@@ -129,14 +129,14 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
           <div className="mt-4 flex items-center gap-3">
             <button
               onClick={clearCanvas}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-theme-text text-xs font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
             >
               <RefreshCw className="w-4 h-4 text-indigo-400" />
               Clear Canvas
             </button>
             <button
               onClick={() => setShowGuide(!showGuide)}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-theme-text text-xs font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
             >
               {showGuide ? <Eye className="w-4 h-4 text-emerald-400" /> : <EyeOff className="w-4 h-4 text-gray-400" />}
               {showGuide ? 'Hide Template' : 'Show Template'}
@@ -160,7 +160,7 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
           </div>
 
           <div className="flex items-center gap-4">
-            <h1 className="text-6xl font-jp font-bold text-white">{currentCard?.kanji}</h1>
+            <h1 className="text-6xl font-jp font-bold text-theme-text">{currentCard?.kanji}</h1>
             <div>
               <h3 className="text-xl font-bold text-indigo-300">{currentCard?.keyword}</h3>
               <p className="text-xs text-gray-400">
@@ -189,14 +189,14 @@ export const StrokeCanvas: React.FC<StrokeCanvasProps> = ({ cards }) => {
             <button
               onClick={() => setSelectedKanjiIndex(prev => Math.max(0, prev - 1))}
               disabled={selectedKanjiIndex === 0}
-              className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-white font-bold rounded-xl text-xs transition"
+              className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-theme-text font-bold rounded-xl text-xs transition"
             >
               Previous Kanji
             </button>
             <button
               onClick={() => setSelectedKanjiIndex(prev => Math.min(cards.length - 1, prev + 1))}
               disabled={selectedKanjiIndex === cards.length - 1}
-              className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-indigo-600/30"
+              className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-theme-text font-bold rounded-xl text-xs transition shadow-lg shadow-indigo-600/30"
             >
               Next Kanji
             </button>

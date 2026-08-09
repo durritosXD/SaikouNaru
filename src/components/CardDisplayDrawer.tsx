@@ -45,11 +45,11 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
         <div className="flex items-center justify-between pb-4 border-b border-slate-800">
           <div className="flex items-center gap-2 text-indigo-400">
             <Sliders className="w-5 h-5" />
-            <h3 className="font-bold text-lg text-white">Live Card Customization</h3>
+            <h3 className="font-bold text-lg text-theme-text">Live Card Customization</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1 rounded-lg text-gray-400 hover:text-theme-text hover:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -73,7 +73,7 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
                 onClick={() => toggleField('front', f.key)}
                 className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
                   isVisible
-                    ? 'bg-indigo-950/40 border-indigo-500/40 text-white'
+                    ? 'bg-indigo-950/40 border-indigo-500/40 text-theme-text'
                     : 'bg-slate-800/40 border-slate-700/50 text-gray-400 hover:bg-slate-800'
                 }`}
               >
@@ -105,7 +105,7 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
                 onClick={() => toggleField('back', f.key)}
                 className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
                   isVisible
-                    ? 'bg-pink-950/40 border-pink-500/40 text-white'
+                    ? 'bg-pink-950/40 border-pink-500/40 text-theme-text'
                     : 'bg-slate-800/40 border-slate-700/50 text-gray-400 hover:bg-slate-800'
                 }`}
               >
@@ -126,7 +126,7 @@ export const CardDisplayDrawer: React.FC<CardDisplayDrawerProps> = ({
         <div className="mt-8 pt-4 border-t border-slate-800 flex justify-end">
           <button
             onClick={onClose}
-            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl text-sm transition shadow-lg shadow-indigo-600/30"
+            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-theme-text font-medium rounded-xl text-sm transition shadow-lg shadow-indigo-600/30"
           >
             Done Customizing
           </button>
