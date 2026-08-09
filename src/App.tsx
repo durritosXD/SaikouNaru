@@ -26,6 +26,7 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 export const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'home' | 'study' | 'canvas' | 'explorer' | 'grammarVocab' | 'analytics' | 'dictionary'>('home');
+  const [theme, setTheme] = useState<'dark' | 'pink'>('dark');
   
   const [cards, setCards] = useState<AnyCard[]>([]);
   const [instances, setInstances] = useState<DeckInstance[]>([]);
@@ -79,6 +80,14 @@ export const App: React.FC = () => {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (theme === 'pink') {
+      document.documentElement.classList.add('theme-pink');
+    } else {
+      document.documentElement.classList.remove('theme-pink');
+    }
+  }, [theme]);
 
   const handleSelectInstance = async (inst: DeckInstance) => {
     setActiveInstance(inst);
@@ -146,7 +155,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white nothing-dot-bg font-sans selection:bg-white selection:text-black">
+    <div className="min-h-screen flex flex-col bg-theme-bg text-theme-text nothing-dot-bg font-sans selection:bg-white selection:text-black transition-colors duration-300">
       {/* PWA Install Popup */}
       <PwaInstallPrompt />
 
@@ -167,6 +176,8 @@ export const App: React.FC = () => {
         }}
         onOpenImport={() => setIsImportOpen(true)}
         streak={streak}
+        theme={theme}
+        setTheme={setTheme}
       />
 
       {/* Main View Router */}

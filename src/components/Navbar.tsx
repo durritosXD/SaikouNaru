@@ -9,7 +9,9 @@ import {
   ChevronDown,
   Flame,
   Sparkles,
-  Settings
+  Settings,
+  Moon,
+  Heart
 } from 'lucide-react';
 import { DeckInstance } from '../types';
 
@@ -23,6 +25,8 @@ interface NavbarProps {
   onOpenEditInstance: () => void;
   onOpenImport: () => void;
   streak: number;
+  theme: 'dark' | 'pink';
+  setTheme: (theme: 'dark' | 'pink') => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -35,33 +39,35 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenEditInstance,
   onOpenImport,
   streak,
+  theme,
+  setTheme,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-[#262626] px-4 lg:px-8 py-3">
+    <header className="sticky top-0 z-40 bg-theme-bg/90 backdrop-blur-xl border-b border-theme-border px-4 lg:px-8 py-3 transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Logo - Nothing OS Style */}
         <div
           onClick={() => setActiveTab('home')}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-2xl bg-[#121212] border border-[#262626] flex items-center justify-center text-white font-jp font-bold text-lg group-hover:border-[#404040] transition relative">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FF0033] absolute top-1.5 right-1.5" />
+          <div className="w-10 h-10 rounded-2xl bg-theme-card border border-theme-border flex items-center justify-center text-theme-text font-jp font-bold text-lg group-hover:border-theme-borderLight transition relative">
+            <span className="w-1.5 h-1.5 rounded-full bg-theme-primary absolute top-1.5 right-1.5" />
             成
           </div>
           <div>
-            <span className="font-extrabold text-lg text-white font-mono tracking-tight">
-              SaikouNaru <span className="text-xs font-normal text-gray-400 font-jp">最高成</span>
+            <span className="font-extrabold text-lg text-theme-text font-mono tracking-tight">
+              SaikouNaru <span className="text-xs font-normal text-theme-textMuted font-jp">最高成</span>
             </span>
-            <span className="ml-2 text-[9px] uppercase font-mono font-bold tracking-widest px-1.5 py-0.5 rounded bg-[#1A1A1A] text-gray-400 border border-[#262626]">
+            <span className="ml-2 text-[9px] uppercase font-mono font-bold tracking-widest px-1.5 py-0.5 rounded bg-theme-surface text-theme-textMuted border border-theme-border">
               SRS PWA
             </span>
           </div>
         </div>
 
         {/* Navigation Tabs - Nothing OS Monochrome Pill */}
-        <nav className="hidden md:flex items-center gap-1 bg-[#121212] p-1 rounded-2xl border border-[#262626]">
+        <nav className="hidden md:flex items-center gap-1 bg-theme-card p-1 rounded-2xl border border-theme-border">
           <button
             onClick={() => setActiveTab('home')}
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
@@ -221,10 +227,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Custom APKG / JSON Import */}
           <button
             onClick={onOpenImport}
-            className="p-2 rounded-xl bg-[#121212] hover:bg-[#1A1A1A] border border-[#262626] text-gray-300 hover:text-white transition"
+            className="p-2 rounded-xl bg-theme-card hover:bg-theme-surface border border-theme-border text-theme-textMuted hover:text-theme-text transition"
             title="Import custom .apkg or .json deck"
           >
-            <Upload className="w-4 h-4 text-gray-400" />
+            <Upload className="w-4 h-4" />
+          </button>
+          
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'pink' : 'dark')}
+            className="p-2 rounded-xl bg-theme-card hover:bg-theme-surface border border-theme-border text-theme-textMuted hover:text-theme-text transition ml-1"
+            title="Toggle Theme"
+          >
+            {theme === 'dark' ? <Heart className="w-4 h-4 text-pink-400" /> : <Moon className="w-4 h-4 text-blue-500" />}
           </button>
         </div>
       </div>

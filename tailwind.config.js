@@ -8,6 +8,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        theme: {
+          bg: 'var(--theme-bg)',
+          card: 'var(--theme-card)',
+          surface: 'var(--theme-surface)',
+          border: 'var(--theme-border)',
+          borderLight: 'var(--theme-border-light)',
+          text: 'var(--theme-text)',
+          textMuted: 'var(--theme-text-muted)',
+          primary: 'var(--theme-primary)',
+        },
         nothing: {
           bg: '#000000',
           card: '#121212',

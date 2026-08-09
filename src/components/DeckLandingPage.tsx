@@ -35,25 +35,25 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in space-y-8">
       {/* Nothing OS Minimal Hero Banner */}
-      <div className="relative overflow-hidden bg-[#121212] border border-[#262626] rounded-3xl p-6 sm:p-10 shadow-2xl">
+      <div className="relative overflow-hidden bg-theme-card border border-theme-border rounded-3xl p-6 sm:p-10 shadow-2xl transition-colors duration-300">
         <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-xs font-mono font-bold uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-[#FF0033] animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-theme-surface border border-theme-border rounded-xl text-theme-text text-xs font-mono font-bold uppercase tracking-wider transition-colors duration-300">
+            <span className="w-2 h-2 rounded-full bg-theme-primary animate-pulse" />
             Japanese Kanji, Vocab & Grammar Studio
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-jp font-extrabold text-white tracking-tight">
-            SaikouNaru <span className="text-gray-400 font-normal">最高成</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-jp font-extrabold text-theme-text tracking-tight transition-colors duration-300">
+            SaikouNaru <span className="text-theme-textMuted font-normal">最高成</span>
           </h1>
-          <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+          <p className="text-xs sm:text-sm text-theme-textMuted leading-relaxed transition-colors duration-300">
             Select a study deck instance to launch your zero-scroll SRS session, explore N5–N1 vocabulary & grammar, or configure custom study goals.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#262626] text-amber-400 rounded-xl text-xs font-mono font-bold">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-theme-surface border border-theme-border text-amber-400 rounded-xl text-xs font-mono font-bold transition-colors duration-300">
               <Flame className="w-4 h-4 fill-amber-400" />
               <span>{streak} Day Streak</span>
             </div>
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#262626] text-indigo-300 rounded-xl text-xs font-mono font-bold">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-theme-surface border border-theme-border text-indigo-300 rounded-xl text-xs font-mono font-bold transition-colors duration-300">
               <BookOpen className="w-4 h-4 text-indigo-400" />
               <span>3,000 Kanji • 8,398 Vocab • 287 Grammar</span>
             </div>
@@ -114,7 +114,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
             return (
               <div
                 key={inst.id}
-                className="group relative bg-[#121212] hover:bg-[#181818] border border-[#262626] hover:border-[#404040] rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-theme-card hover:bg-theme-surface border border-theme-border hover:border-theme-borderLight rounded-3xl p-6 shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Top Level Badges & Actions */}
@@ -123,7 +123,7 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                       {inst.jlptLevels.map((lvl) => (
                         <span
                           key={lvl}
-                          className="px-2.5 py-0.5 text-xs font-mono font-bold rounded-lg bg-[#1A1A1A] text-white border border-[#262626]"
+                          className="px-2.5 py-0.5 text-xs font-mono font-bold rounded-lg bg-theme-surface text-theme-text border border-theme-border transition-colors duration-300"
                         >
                           {lvl}
                         </span>
@@ -158,10 +158,10 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="text-xl font-bold text-white group-hover:text-indigo-300 transition">
+                  <h3 className="text-xl font-bold text-theme-text group-hover:text-theme-primary transition">
                     {inst.name}
                   </h3>
-                  <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-theme-textMuted mt-1 line-clamp-2 leading-relaxed">
                     {inst.description}
                   </p>
 
@@ -209,13 +209,13 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
           {/* Create New Instance Tile */}
           <div
             onClick={onOpenCreateInstance}
-            className="border-2 border-dashed border-[#262626] hover:border-white bg-[#0A0A0A] hover:bg-[#121212] rounded-3xl p-8 cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[320px]"
+            className="border-2 border-dashed border-theme-border hover:border-theme-text bg-theme-bg hover:bg-theme-card rounded-3xl p-8 cursor-pointer transition-all duration-300 flex flex-col items-center justify-center text-center group min-h-[320px]"
           >
-            <div className="p-4 bg-[#1A1A1A] border border-[#262626] rounded-2xl text-white group-hover:scale-110 transition mb-3">
-              <Plus className="w-8 h-8 text-[#FF0033]" />
+            <div className="p-4 bg-theme-surface border border-theme-border rounded-2xl text-theme-text group-hover:scale-110 transition mb-3">
+              <Plus className="w-8 h-8 text-theme-primary" />
             </div>
-            <h4 className="font-bold text-lg text-white font-mono">Create Custom Instance</h4>
-            <p className="text-xs text-gray-400 mt-1 max-w-xs">
+            <h4 className="font-bold text-lg text-theme-text font-mono transition-colors duration-300">Create Custom Instance</h4>
+            <p className="text-xs text-theme-textMuted mt-1 max-w-xs transition-colors duration-300">
               Combine specific JLPT levels, customize card fields, and set daily limits.
             </p>
           </div>

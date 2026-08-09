@@ -131,73 +131,9 @@ export async function initializeDatabase() {
     console.log(`Seeded/Synced ${kanjiData.length} Kanji, ${vocabData.length} Vocab, ${grammarData.length} Grammar cards into IndexedDB.`);
   }
 
-  // Seed default deck instances ONLY on initial first run
-  const instancesInitialized = localStorage.getItem('coto_deck_instances_v2') === 'true';
-  const instanceCount = await db.count('deckInstances');
-  if (!instancesInitialized || instanceCount === 0) {
-    const defaultInstances: DeckInstance[] = [
-      {
-        id: 'instance_n5',
-        name: 'JLPT N5 Essentials (Kanji)',
-        description: 'Master 194 foundational N5 Kanji with Koohii mnemonics and stroke order.',
-        jlptLevels: ['N5'],
-        cardTypes: ['kanji'],
-        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
-        dailyNewLimit: 15,
-        dailyReviewLimit: 100,
-        createdDate: Date.now(),
-      },
-      {
-        id: 'instance_n5_vocab',
-        name: 'JLPT N5 Core Vocab',
-        description: 'Master 669 foundational N5 vocabulary words with conjugation toggles.',
-        jlptLevels: ['N5'],
-        cardTypes: ['vocab'],
-        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
-        dailyNewLimit: 15,
-        dailyReviewLimit: 100,
-        createdDate: Date.now(),
-      },
-      {
-        id: 'instance_n5_grammar',
-        name: 'JLPT N5 Master Grammar',
-        description: 'Master 40 N5 Japanese grammar points with furigana sample sentences & nuances.',
-        jlptLevels: ['N5'],
-        cardTypes: ['grammar'],
-        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
-        dailyNewLimit: 10,
-        dailyReviewLimit: 50,
-        createdDate: Date.now(),
-      },
-      {
-        id: 'instance_all_vocab',
-        name: 'Complete JLPT Vocab (N5-N1)',
-        description: 'Comprehensive deck covering 8,398 vocabulary words across all levels.',
-        jlptLevels: ['N5', 'N4', 'N3', 'N2', 'N1'],
-        cardTypes: ['vocab'],
-        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
-        dailyNewLimit: 20,
-        dailyReviewLimit: 150,
-        createdDate: Date.now(),
-      },
-      {
-        id: 'instance_all_grammar',
-        name: 'Complete JLPT Grammar (N5-N1)',
-        description: 'Master all 287 JLPT grammar points with nuances & furigana sample sentences.',
-        jlptLevels: ['N5', 'N4', 'N3', 'N2', 'N1'],
-        cardTypes: ['grammar'],
-        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
-        dailyNewLimit: 10,
-        dailyReviewLimit: 80,
-        createdDate: Date.now(),
-      }
-    ];
-
-    for (const inst of defaultInstances) {
-      await db.put('deckInstances', inst);
-    }
-    localStorage.setItem('coto_deck_instances_v2', 'true');
-  }
+  // We no longer seed default deck instances on first run.
+  // The system starts clean for new users.
+  localStorage.setItem('coto_deck_instances_v2', 'true');
 }
 
 // Cards API
