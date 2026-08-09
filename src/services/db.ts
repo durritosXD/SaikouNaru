@@ -1,11 +1,13 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
-import { KanjiCard, DeckInstance, SRSRecord, ReviewLog, UserStats, CardDisplaySettings, RevisionItem } from '../types';
+import { KanjiCard, VocabCard, GrammarCard, AnyCard, DeckInstance, SRSRecord, ReviewLog, UserStats, CardDisplaySettings, RevisionItem } from '../types';
 import kanjiData from '../data/kanji_rtk_database.json';
+import vocabData from '../data/vocab_database.json';
+import grammarData from '../data/grammar_database.json';
 
 interface KanjiSenseiDB extends DBSchema {
   cards: {
     key: string;
-    value: KanjiCard;
+    value: AnyCard;
     indexes: { 'by-jlpt': string; 'by-type': string };
   };
   deckInstances: {
@@ -34,7 +36,7 @@ interface KanjiSenseiDB extends DBSchema {
 }
 
 const DB_NAME = 'kanji_sensei_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 let dbPromise: Promise<IDBPDatabase<KanjiSenseiDB>> | null = null;
 
@@ -112,51 +114,81 @@ export const DEFAULT_DISPLAY_SETTINGS: CardDisplaySettings = {
 export async function initializeDatabase() {
   const db = await getDB();
   
-  // Seed / update cards to sync accurate JLPT level classification
-  const count = await db.count('cards');
-  if (count === 0 || localStorage.getItem('kanji_jlpt_synced_v2') !== 'true') {
+  // Seed / update cards to sync accurate Kanji, Vocab, and Grammar
+  if (localStorage.getItem('coto_vocab_grammar_synced_v1') !== 'true') {
     const tx = db.transaction('cards', 'readwrite');
     for (const card of kanjiData as KanjiCard[]) {
       await tx.store.put(card);
     }
+    for (const card of vocabData as VocabCard[]) {
+      await tx.store.put(card);
+    }
+    for (const card of grammarData as GrammarCard[]) {
+      await tx.store.put(card);
+    }
     await tx.done;
-    localStorage.setItem('kanji_jlpt_synced_v2', 'true');
-    console.log(`Seeded/Synced ${kanjiData.length} cards into IndexedDB.`);
+    localStorage.setItem('coto_vocab_grammar_synced_v1', 'true');
+    console.log(`Seeded/Synced ${kanjiData.length} Kanji, ${vocabData.length} Vocab, ${grammarData.length} Grammar cards into IndexedDB.`);
   }
 
   // Seed default deck instances ONLY on initial first run
-  const instancesInitialized = localStorage.getItem('kanji_deck_instances_initialized_v1') === 'true';
+  const instancesInitialized = localStorage.getItem('coto_deck_instances_v2') === 'true';
   const instanceCount = await db.count('deckInstances');
-  if (!instancesInitialized && instanceCount === 0) {
+  if (!instancesInitialized || instanceCount === 0) {
     const defaultInstances: DeckInstance[] = [
       {
         id: 'instance_n5',
-        name: 'JLPT N5 Essentials',
+        name: 'JLPT N5 Essentials (Kanji)',
         description: 'Master 194 foundational N5 Kanji with Koohii mnemonics and stroke order.',
         jlptLevels: ['N5'],
+        cardTypes: ['kanji'],
         displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
         dailyNewLimit: 15,
         dailyReviewLimit: 100,
         createdDate: Date.now(),
       },
       {
-        id: 'instance_n5_n4',
-        name: 'N5 & N4 Combined Sprint',
-        description: 'Comprehensive study deck for N5 and N4 levels (~540 Kanji).',
-        jlptLevels: ['N5', 'N4'],
+        id: 'instance_n5_vocab',
+        name: 'JLPT N5 Core Vocab',
+        description: 'Master 669 foundational N5 vocabulary words with conjugation toggles.',
+        jlptLevels: ['N5'],
+        cardTypes: ['vocab'],
+        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
+        dailyNewLimit: 15,
+        dailyReviewLimit: 100,
+        createdDate: Date.now(),
+      },
+      {
+        id: 'instance_n5_grammar',
+        name: 'JLPT N5 Master Grammar',
+        description: 'Master 40 N5 Japanese grammar points with furigana sample sentences & nuances.',
+        jlptLevels: ['N5'],
+        cardTypes: ['grammar'],
+        displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
+        dailyNewLimit: 10,
+        dailyReviewLimit: 50,
+        createdDate: Date.now(),
+      },
+      {
+        id: 'instance_all_vocab',
+        name: 'Complete JLPT Vocab (N5-N1)',
+        description: 'Comprehensive deck covering 8,398 vocabulary words across all levels.',
+        jlptLevels: ['N5', 'N4', 'N3', 'N2', 'N1'],
+        cardTypes: ['vocab'],
         displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
         dailyNewLimit: 20,
         dailyReviewLimit: 150,
         createdDate: Date.now(),
       },
       {
-        id: 'instance_all_kanji',
-        name: 'RTK 3,000 All Levels',
-        description: 'Complete RTK 1 & 3 database covering N5 to N1.',
+        id: 'instance_all_grammar',
+        name: 'Complete JLPT Grammar (N5-N1)',
+        description: 'Master all 287 JLPT grammar points with nuances & furigana sample sentences.',
         jlptLevels: ['N5', 'N4', 'N3', 'N2', 'N1'],
+        cardTypes: ['grammar'],
         displaySettings: JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)),
-        dailyNewLimit: 25,
-        dailyReviewLimit: 200,
+        dailyNewLimit: 10,
+        dailyReviewLimit: 80,
         createdDate: Date.now(),
       }
     ];
@@ -164,19 +196,27 @@ export async function initializeDatabase() {
     for (const inst of defaultInstances) {
       await db.put('deckInstances', inst);
     }
+    localStorage.setItem('coto_deck_instances_v2', 'true');
   }
-
-  // Mark instances initialization as complete so user deletions persist across reloads
-  localStorage.setItem('kanji_deck_instances_initialized_v1', 'true');
 }
 
 // Cards API
-export async function getAllCards(): Promise<KanjiCard[]> {
+export async function getAllCards(): Promise<AnyCard[]> {
   const db = await getDB();
   return db.getAll('cards');
 }
 
-export async function getCardsByJLPT(levels: string[]): Promise<KanjiCard[]> {
+export async function getAllVocab(): Promise<VocabCard[]> {
+  const all = await getAllCards();
+  return all.filter(c => c.type === 'vocab') as VocabCard[];
+}
+
+export async function getAllGrammar(): Promise<GrammarCard[]> {
+  const all = await getAllCards();
+  return all.filter(c => c.type === 'grammar') as GrammarCard[];
+}
+
+export async function getCardsByJLPT(levels: string[]): Promise<AnyCard[]> {
   const allCards = await getAllCards();
   return allCards.filter(c => levels.includes(c.jlpt));
 }

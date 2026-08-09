@@ -2,20 +2,20 @@ import React from 'react';
 import { Layers, BookOpen, PenTool, Sparkles, BarChart3 } from 'lucide-react';
 
 interface MobileBottomNavProps {
-  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary';
-  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary') => void;
+  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'grammarVocab' | 'analytics' | 'dictionary';
+  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'grammarVocab' | 'analytics' | 'dictionary') => void;
 }
 
 export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   activeTab,
   setActiveTab,
 }) => {
-  const navItems: { id: 'home' | 'study' | 'dictionary' | 'canvas' | 'explorer' | 'analytics'; label: string; icon: React.ReactNode }[] = [
+  const navItems: { id: 'home' | 'study' | 'grammarVocab' | 'dictionary' | 'canvas' | 'explorer' | 'analytics'; label: string; icon: React.ReactNode }[] = [
     { id: 'home', label: 'Decks', icon: <Layers className="w-5 h-5" /> },
     { id: 'study', label: 'Study', icon: <BookOpen className="w-5 h-5" /> },
+    { id: 'grammarVocab', label: 'Vocab', icon: <Sparkles className="w-5 h-5 text-indigo-400" /> },
     { id: 'dictionary', label: 'JMdict', icon: <Sparkles className="w-5 h-5 text-[#FF0033]" /> },
-    { id: 'canvas', label: 'Draw', icon: <PenTool className="w-5 h-5" /> },
-    { id: 'explorer', label: 'Explorer', icon: <Sparkles className="w-5 h-5" /> },
+    { id: 'explorer', label: 'Kanji', icon: <Sparkles className="w-5 h-5" /> },
     { id: 'analytics', label: 'Stats', icon: <BarChart3 className="w-5 h-5" /> },
   ];
 

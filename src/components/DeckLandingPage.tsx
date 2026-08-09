@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Layers, Plus, BookOpen, Settings, Flame, Sparkles, ArrowRight, Trash2, AlertTriangle, X } from 'lucide-react';
-import { DeckInstance, KanjiCard, SRSRecord } from '../types';
+import { DeckInstance, AnyCard, SRSRecord } from '../types';
 
 interface DeckLandingPageProps {
   instances: DeckInstance[];
-  cards: KanjiCard[];
+  cards: AnyCard[];
   srsRecords: Map<string, SRSRecord>;
   onSelectInstance: (instance: DeckInstance) => void;
   onOpenCreateInstance: () => void;
@@ -39,13 +39,13 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
         <div className="relative z-10 max-w-2xl space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white text-xs font-mono font-bold uppercase tracking-wider">
             <span className="w-2 h-2 rounded-full bg-[#FF0033] animate-pulse" />
-            Spaced Repetition & Kanji Studio
+            Japanese Kanji, Vocab & Grammar Studio
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-jp font-extrabold text-white tracking-tight">
             SaikouNaru <span className="text-gray-400 font-normal">最高成</span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
-            Select a study deck instance to launch your zero-scroll SRS flashcard session, or configure a custom JLPT deck.
+            Select a study deck instance to launch your zero-scroll SRS session, explore N5–N1 vocabulary & grammar, or configure custom study goals.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -53,9 +53,9 @@ export const DeckLandingPage: React.FC<DeckLandingPageProps> = ({
               <Flame className="w-4 h-4 fill-amber-400" />
               <span>{streak} Day Streak</span>
             </div>
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#262626] text-gray-300 rounded-xl text-xs font-mono font-bold">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#262626] text-indigo-300 rounded-xl text-xs font-mono font-bold">
               <BookOpen className="w-4 h-4 text-indigo-400" />
-              <span>3,000 Kanji Library Loaded</span>
+              <span>3,000 Kanji • 8,398 Vocab • 287 Grammar</span>
             </div>
           </div>
         </div>

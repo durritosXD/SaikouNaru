@@ -8,16 +8,16 @@ import {
   CheckCircle2,
   X,
   Layers,
-  Maximize2,
-  Minimize2
+  Info
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { KanjiCard, DeckInstance, SRSRecord, Rating } from '../types';
+import { AnyCard, KanjiCard, VocabCard, GrammarCard, DeckInstance, SRSRecord, Rating, ConjugationFormKey } from '../types';
 import { calculateNextSRS, getPreviewIntervals, createInitialSRSRecord } from '../services/srsAlgorithm';
 import { saveSRSRecord, saveReviewLog } from '../services/db';
+import { CONJUGATION_LABELS, getFormValue } from '../services/conjugation';
 
 interface StudySessionProps {
-  cards: KanjiCard[];
+  cards: AnyCard[];
   activeInstance: DeckInstance;
   srsRecords: Map<string, SRSRecord>;
   onOpenCustomizer: () => void;
@@ -33,19 +33,31 @@ export const StudySession: React.FC<StudySessionProps> = ({
   onRefreshRecords,
   onExitSession,
 }) => {
-  const [queue, setQueue] = useState<KanjiCard[]>([]);
+  const [queue, setQueue] = useState<AnyCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [activeStoryTab, setActiveStoryTab] = useState<'story1' | 'story2'>('story1');
+  const [activeForm, setActiveForm] = useState<ConjugationFormKey>('root');
 
   // Initialize queue once when activeInstance changes or cards load
   useEffect(() => {
-    const instanceCards = cards.filter(c => activeInstance.jlptLevels.includes(c.jlpt));
+    const instanceCards = cards.filter(c => {
+      // Level check
+      const levelMatch = activeInstance.jlptLevels.includes(c.jlpt);
+      if (!levelMatch) return false;
+
+      // Type check if cardTypes specified
+      if (activeInstance.cardTypes && activeInstance.cardTypes.length > 0) {
+        return activeInstance.cardTypes.includes(c.type);
+      }
+      return true;
+    });
+
     const now = Date.now();
 
-    const dueCards: KanjiCard[] = [];
-    const activeLearningCards: KanjiCard[] = [];
-    const unstartedCards: KanjiCard[] = [];
+    const dueCards: AnyCard[] = [];
+    const activeLearningCards: AnyCard[] = [];
+    const unstartedCards: AnyCard[] = [];
     let startedNewCount = 0;
 
     for (const card of instanceCards) {
@@ -74,6 +86,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
     setQueue(initialQueue);
     setCurrentIndex(0);
     setIsFlipped(false);
+    setActiveForm('root');
   }, [cards, activeInstance.id]);
 
   const currentCard = queue[currentIndex];
@@ -83,16 +96,27 @@ export const StudySession: React.FC<StudySessionProps> = ({
 
   const previewIntervals = currentSRS ? getPreviewIntervals(currentSRS) : null;
 
-  // Speak Japanese Kanji / Reading
+  // Speak Japanese audio
   const playAudio = useCallback(() => {
     if (!currentCard || !('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
-    const textToSpeak = currentCard.kanji;
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = 'ja-JP';
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
-  }, [currentCard]);
+    let textToSpeak = '';
+    if (currentCard.type === 'kanji') {
+      textToSpeak = (currentCard as KanjiCard).kanji;
+    } else if (currentCard.type === 'vocab') {
+      const v = currentCard as VocabCard;
+      const formVal = getFormValue(v.conjugations, v.kanji || v.reading, v.reading, activeForm);
+      textToSpeak = formVal.text;
+    } else if (currentCard.type === 'grammar') {
+      textToSpeak = (currentCard as GrammarCard).title;
+    }
+    if (textToSpeak) {
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'ja-JP';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [currentCard, activeForm]);
 
   // Handle rating submission
   const handleRating = async (rating: Rating) => {
@@ -112,6 +136,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
     });
 
     setIsFlipped(false);
+    setActiveForm('root');
 
     // If card is still in learning phase or failed (Again), re-queue it at the end of current session queue!
     if (nextRecord.phase === 'learning' || nextRecord.phase === 'relearning') {
@@ -227,7 +252,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
             </button>
           )}
 
-          {/* Anki 3-Color Badges: Blue = New, Red = Learn, Green = Review */}
+          {/* Anki 3-Color Badges */}
           <div className="flex items-center gap-1.5 font-mono text-xs font-bold">
             <span className="px-2.5 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-xl" title="New Cards">
               🔵 {blueNewCount}
@@ -268,139 +293,218 @@ export const StudySession: React.FC<StudySessionProps> = ({
         onClick={() => setIsFlipped(!isFlipped)}
         className="flex-1 my-2 bg-[#121212] border border-[#262626] hover:border-[#404040] rounded-3xl p-4 sm:p-8 flex flex-col justify-between cursor-pointer transition shadow-2xl overflow-hidden relative"
       >
-        {/* Card Header Indicator with Anki Phase Color Badge */}
+        {/* Card Header Indicator */}
         <div className="flex items-center justify-between text-[11px] text-gray-500 shrink-0">
           <div className="flex items-center gap-2">
             <span className="font-mono uppercase tracking-wider text-indigo-400 font-bold flex items-center gap-1">
               <Layers className="w-3 h-3" />
               {isFlipped ? 'Answer (Back)' : 'Question (Front)'}
             </span>
-            {(!currentSRS || currentSRS.phase === 'new') && (
-              <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold font-mono text-[9px]">
-                NEW
-              </span>
-            )}
-            {(currentSRS?.phase === 'learning' || currentSRS?.phase === 'relearning') && (
-              <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 font-bold font-mono text-[9px]">
-                LEARNING
-              </span>
-            )}
-            {currentSRS?.phase === 'review' && (
-              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold font-mono text-[9px]">
-                REVIEW
-              </span>
-            )}
+            <span className="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold font-mono text-[9px] uppercase">
+              {currentCard.type}
+            </span>
           </div>
-          <span>JLPT {currentCard.jlpt} • RTK #{currentCard.rtkNum}</span>
+          <span>JLPT {currentCard.jlpt}</span>
         </div>
 
-        {/* Card Center Content */}
-        <div className="my-auto py-2 flex flex-col items-center text-center space-y-4 max-h-full overflow-y-auto">
-          {/* Kanji Glyphs (Standard Exam Noto Sans JP Font) */}
-          {currentFaceSettings.showKanji && (
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-jp font-bold text-white tracking-widest leading-none drop-shadow-md">
-              {currentCard.kanji}
-            </h1>
-          )}
+        {/* Card Center Content Renderer */}
+        <div className="my-auto py-2 flex flex-col items-center text-center space-y-4 max-h-full overflow-y-auto w-full max-w-2xl mx-auto">
+          {/* A. KANJI CARD */}
+          {currentCard.type === 'kanji' && (() => {
+            const kanjiCard = currentCard as KanjiCard;
+            return (
+              <>
+                {currentFaceSettings.showKanji && (
+                  <h1 className="text-6xl sm:text-7xl md:text-8xl font-jp font-bold text-white tracking-widest leading-none drop-shadow-md">
+                    {kanjiCard.kanji}
+                  </h1>
+                )}
+                {currentFaceSettings.showKeyword && (
+                  <div className="text-xl sm:text-2xl font-bold text-indigo-300 tracking-wide">
+                    {kanjiCard.keyword}
+                  </div>
+                )}
+                {currentFaceSettings.showMeaning && kanjiCard.meaning !== kanjiCard.keyword && (
+                  <div className="text-xs sm:text-sm text-gray-300 max-w-md">
+                    {kanjiCard.meaning}
+                  </div>
+                )}
+                {currentFaceSettings.showReadings && (kanjiCard.onyomi || kanjiCard.kunyomi) && (
+                  <div className="flex flex-wrap justify-center gap-4 py-2 border-y border-[#262626] w-full max-w-md">
+                    {kanjiCard.onyomi && (
+                      <div className="text-center">
+                        <span className="text-[9px] font-mono uppercase text-indigo-400 block font-bold">Onyomi (音)</span>
+                        <span className="text-sm sm:text-base font-medium text-white">{kanjiCard.onyomi}</span>
+                      </div>
+                    )}
+                    {kanjiCard.kunyomi && (
+                      <div className="text-center">
+                        <span className="text-[9px] font-mono uppercase text-emerald-400 block font-bold">Kunyomi (訓)</span>
+                        <span className="text-sm sm:text-base font-medium text-white">{kanjiCard.kunyomi}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            );
+          })()}
 
-          {/* Keyword / Meaning */}
-          {currentFaceSettings.showKeyword && (
-            <div className="text-xl sm:text-2xl font-bold text-indigo-300 tracking-wide">
-              {currentCard.keyword}
-            </div>
-          )}
+          {/* B. VOCAB CARD */}
+          {currentCard.type === 'vocab' && (() => {
+            const vocabCard = currentCard as VocabCard;
+            const activeFormVal = getFormValue(
+              vocabCard.conjugations,
+              vocabCard.kanji || vocabCard.reading,
+              vocabCard.reading,
+              activeForm
+            );
 
-          {currentFaceSettings.showMeaning && currentCard.meaning !== currentCard.keyword && (
-            <div className="text-xs sm:text-sm text-gray-300 max-w-md">
-              {currentCard.meaning}
-            </div>
-          )}
+            return (
+              <>
+                <h1 className="text-5xl sm:text-6xl md:text-7xl font-jp font-bold text-white tracking-widest leading-none drop-shadow-md">
+                  {activeFormVal.text}
+                </h1>
 
-          {/* Onyomi / Kunyomi Readings */}
-          {currentFaceSettings.showReadings && (currentCard.onyomi || currentCard.kunyomi) && (
-            <div className="flex flex-wrap justify-center gap-4 py-2 border-y border-[#262626] w-full max-w-md">
-              {currentCard.onyomi && (
-                <div className="text-center">
-                  <span className="text-[9px] font-mono uppercase text-indigo-400 block font-bold">
-                    Onyomi (音)
-                  </span>
-                  <span className="text-sm sm:text-base font-medium text-white">{currentCard.onyomi}</span>
-                </div>
-              )}
-              {currentCard.kunyomi && (
-                <div className="text-center">
-                  <span className="text-[9px] font-mono uppercase text-emerald-400 block font-bold">
-                    Kunyomi (訓)
-                  </span>
-                  <span className="text-sm sm:text-base font-medium text-white">{currentCard.kunyomi}</span>
-                </div>
-              )}
-            </div>
-          )}
+                {activeFormVal.reading && activeFormVal.reading !== activeFormVal.text && (
+                  <p className="text-base sm:text-lg font-jp text-indigo-300 font-medium">
+                    {activeFormVal.reading}
+                  </p>
+                )}
 
-          {/* Stroke GIF Animation */}
-          {currentFaceSettings.showStrokes && currentCard.strokeGif && (
-            <div className="p-2 bg-[#1A1A1A] border border-[#262626] rounded-2xl flex flex-col items-center">
-              <img
-                src={`/strokes/${currentCard.strokeGif}`}
-                alt={`${currentCard.kanji} stroke order`}
-                className="w-16 h-16 sm:w-20 sm:h-20 object-contain invert brightness-200"
-                onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
-              />
-            </div>
-          )}
+                {isFlipped && (
+                  <div className="w-full max-w-md space-y-4 animate-fade-in">
+                    <div className="p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                      <span className="text-[9px] font-mono uppercase font-bold text-gray-400 block mb-1">
+                        English Meaning
+                      </span>
+                      <p className="text-sm sm:text-base text-gray-200 font-medium">
+                        {vocabCard.meaning}
+                      </p>
+                    </div>
 
-          {/* Koohii Stories */}
-          {currentFaceSettings.showKoohii && (currentCard.koohii1 || currentCard.koohii2) && (
-            <div className="w-full max-w-lg text-left bg-[#1A1A1A] border border-[#262626] rounded-2xl p-3 sm:p-4 text-xs text-gray-300">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Koohii Story
-                </span>
-                <div className="flex gap-1">
-                  {currentCard.koohii1 && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveStoryTab('story1');
-                      }}
-                      className={`px-2 py-0.5 text-[9px] font-bold rounded ${
-                        activeStoryTab === 'story1' ? 'bg-indigo-600 text-white' : 'bg-[#262626] text-gray-400'
-                      }`}
-                    >
-                      Story 1
-                    </button>
-                  )}
-                  {currentCard.koohii2 && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveStoryTab('story2');
-                      }}
-                      className={`px-2 py-0.5 text-[9px] font-bold rounded ${
-                        activeStoryTab === 'story2' ? 'bg-indigo-600 text-white' : 'bg-[#262626] text-gray-400'
-                      }`}
-                    >
-                      Story 2
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div
-                className="leading-relaxed font-sans max-h-24 overflow-y-auto"
-                dangerouslySetInnerHTML={{
-                  __html: activeStoryTab === 'story1' ? currentCard.koohii1 : currentCard.koohii2 || currentCard.koohii1,
-                }}
-              />
-            </div>
-          )}
+                    {/* Backside Conjugation Toggles (past +ve, past -ve, Te form, Tai form, Shortform, root form) */}
+                    <div onClick={(e) => e.stopPropagation()} className="pt-2">
+                      <span className="text-[10px] font-mono uppercase font-bold text-indigo-400 block mb-2">
+                        Backside Form Toggles (Conjugations)
+                      </span>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
+                          const conf = CONJUGATION_LABELS[key];
+                          const isSelected = activeForm === key;
+                          return (
+                            <button
+                              key={key}
+                              onClick={() => setActiveForm(key)}
+                              className={`py-2 px-2 rounded-xl border text-xs font-bold transition flex flex-col items-center justify-center ${
+                                isSelected
+                                  ? 'bg-white text-black border-white shadow'
+                                  : 'bg-[#121212] text-gray-400 border-[#262626] hover:text-white hover:bg-[#262626]'
+                              }`}
+                            >
+                              <span>{conf.label}</span>
+                              <span className="text-[8px] opacity-75 font-jp">{conf.jp}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
+
+          {/* C. GRAMMAR CARD */}
+          {currentCard.type === 'grammar' && (() => {
+            const grammarCard = currentCard as GrammarCard;
+            return (
+              <>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-jp font-extrabold text-amber-300 tracking-wide leading-tight drop-shadow-md">
+                  {grammarCard.title}
+                </h1>
+
+                {!isFlipped ? (
+                  <p className="text-sm font-mono text-gray-400 bg-[#1A1A1A] px-4 py-2 rounded-2xl border border-[#262626]">
+                    Connection: {grammarCard.structure}
+                  </p>
+                ) : (
+                  <div className="w-full max-w-md space-y-3 text-left animate-fade-in">
+                    {/* Structure & Connection */}
+                    <div className="p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                      <span className="text-[9px] font-mono uppercase text-amber-400 font-bold block mb-1">
+                        Structure / Connection Rule
+                      </span>
+                      <code className="text-xs font-mono text-gray-200">{grammarCard.structure}</code>
+                    </div>
+
+                    {/* Nuances Explanation */}
+                    <div className="p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                      <span className="text-[9px] font-mono uppercase text-indigo-400 font-bold block mb-1 flex items-center gap-1">
+                        <Info className="w-3 h-3" /> Nuances & Usage Context
+                      </span>
+                      <p className="text-xs text-gray-300 leading-relaxed">{grammarCard.nuance}</p>
+                    </div>
+
+                    {/* Furigana-Only Sample Sentences */}
+                    <div className="p-3 bg-[#1A1A1A] border border-[#262626] rounded-2xl">
+                      <span className="text-[9px] font-mono uppercase text-emerald-400 font-bold block mb-2">
+                        Sample Sentences (Furigana Only)
+                      </span>
+                      <div className="space-y-2">
+                        {grammarCard.sampleSentences.map((sample, idx) => (
+                          <div key={idx} className="p-2 bg-[#121212] rounded-xl border border-[#262626]">
+                            <p className="text-xs font-jp font-medium text-emerald-300">
+                              {sample.furigana}
+                            </p>
+                            <p className="text-[11px] text-gray-400 mt-0.5">{sample.english}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Backside Conjugation Toggles */}
+                    <div onClick={(e) => e.stopPropagation()} className="pt-1">
+                      <span className="text-[10px] font-mono uppercase font-bold text-indigo-400 block mb-1.5">
+                        Backside Form Toggles (Conjugations)
+                      </span>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        {(Object.keys(CONJUGATION_LABELS) as ConjugationFormKey[]).map((key) => {
+                          const conf = CONJUGATION_LABELS[key];
+                          const isSelected = activeForm === key;
+                          return (
+                            <button
+                              key={key}
+                              onClick={() => setActiveForm(key)}
+                              className={`py-1.5 px-2 rounded-xl border text-[11px] font-bold transition flex flex-col items-center justify-center ${
+                                isSelected
+                                  ? 'bg-white text-black border-white shadow'
+                                  : 'bg-[#121212] text-gray-400 border-[#262626] hover:text-white hover:bg-[#262626]'
+                              }`}
+                            >
+                              <span>{conf.label}</span>
+                              <span className="text-[8px] opacity-75 font-jp">{conf.jp}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {grammarCard.conjugations && (
+                        <div className="mt-1 text-center text-[10px] font-jp text-indigo-300 p-1.5 bg-[#1A1A1A] rounded-xl border border-[#262626]">
+                          Form Rule: {grammarCard.conjugations[activeForm]}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
 
         {/* Flip Hint */}
         <div className="text-center pt-2 border-t border-[#262626] text-[11px] text-gray-500 shrink-0">
           {!isFlipped ? (
             <span className="text-indigo-400 font-semibold flex items-center justify-center gap-1">
-              <Eye className="w-3.5 h-3.5" /> Tap card or press [Space] to reveal answer
+              <Eye className="w-3.5 h-3.5" /> Tap card or press [Space] to reveal answer & backside conjugations
             </span>
           ) : (
             <span>Rate your recall below (Shortcuts: 1, 2, 3, 4)</span>
@@ -408,7 +512,7 @@ export const StudySession: React.FC<StudySessionProps> = ({
         </div>
       </div>
 
-      {/* 3. Bottom Rating Bar (Tactile, 0 Scroll) */}
+      {/* 3. Bottom Rating Bar */}
       <div className="shrink-0 pt-1">
         {isFlipped && previewIntervals ? (
           <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-2xl mx-auto animate-fade-in">

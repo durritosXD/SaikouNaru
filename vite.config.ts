@@ -32,7 +32,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,gif,json}'],
-        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024 // 6 MB limit for large pre-bundled decks
+        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024 // 15 MB limit for full offline Kanji, Vocab & Grammar databases
       },
       devOptions: {
         enabled: true

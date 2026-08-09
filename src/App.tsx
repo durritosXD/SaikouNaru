@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   initializeDatabase,
   getAllCards,
@@ -8,12 +8,13 @@ import {
   saveDeckInstance,
   deleteDeckInstance
 } from './services/db';
-import { KanjiCard, DeckInstance, SRSRecord, ReviewLog, CardDisplaySettings } from './types';
+import { AnyCard, KanjiCard, DeckInstance, SRSRecord, ReviewLog, CardDisplaySettings } from './types';
 import { Navbar } from './components/Navbar';
 import { DeckLandingPage } from './components/DeckLandingPage';
 import { StudySession } from './components/StudySession';
 import { StrokeCanvas } from './components/StrokeCanvas';
 import { KanjiExplorer } from './components/KanjiExplorer';
+import { GrammarVocabExplorer } from './components/GrammarVocabExplorer';
 import { AnalyticsView } from './components/AnalyticsView';
 import { InstanceModal } from './components/InstanceModal';
 import { DictionaryView } from './components/DictionaryView';
@@ -24,13 +25,18 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 
 export const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'study' | 'canvas' | 'explorer' | 'grammarVocab' | 'analytics' | 'dictionary'>('home');
   
-  const [cards, setCards] = useState<KanjiCard[]>([]);
+  const [cards, setCards] = useState<AnyCard[]>([]);
   const [instances, setInstances] = useState<DeckInstance[]>([]);
   const [activeInstance, setActiveInstance] = useState<DeckInstance | null>(null);
   const [srsRecords, setSrsRecords] = useState<Map<string, SRSRecord>>(new Map());
   const [reviewLogs, setReviewLogs] = useState<ReviewLog[]>([]);
+
+  // Filter kanji-only cards for components that strictly require KanjiCard (StrokeCanvas, KanjiExplorer)
+  const kanjiCards = useMemo(() => {
+    return cards.filter(c => c.type === 'kanji') as KanjiCard[];
+  }, [cards]);
 
   // Modals state
   const [isInstanceModalOpen, setIsInstanceModalOpen] = useState(false);
@@ -198,21 +204,25 @@ export const App: React.FC = () => {
           />
         )}
 
+        {activeTab === 'grammarVocab' && (
+          <GrammarVocabExplorer cards={cards} />
+        )}
+
         {activeTab === 'dictionary' && (
           <DictionaryView />
         )}
 
         {activeTab === 'canvas' && (
-          <StrokeCanvas cards={cards} />
+          <StrokeCanvas cards={kanjiCards} />
         )}
 
         {activeTab === 'explorer' && (
-          <KanjiExplorer cards={cards} />
+          <KanjiExplorer cards={kanjiCards} />
         )}
 
         {activeTab === 'analytics' && activeInstance && (
           <AnalyticsView
-            cards={cards}
+            cards={kanjiCards}
             activeInstance={activeInstance}
             srsRecords={srsRecords}
             reviewLogs={reviewLogs}

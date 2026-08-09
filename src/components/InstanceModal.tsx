@@ -21,6 +21,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['N5']);
+  const [selectedTypes, setSelectedTypes] = useState<('kanji' | 'vocab' | 'grammar')[]>(['kanji', 'vocab', 'grammar']);
   const [dailyNewLimit, setDailyNewLimit] = useState(15);
   const [dailyReviewLimit, setDailyReviewLimit] = useState(100);
   const [displaySettings, setDisplaySettings] = useState<CardDisplaySettings>(DEFAULT_DISPLAY_SETTINGS);
@@ -30,13 +31,15 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
       setName(instanceToEdit.name);
       setDescription(instanceToEdit.description);
       setSelectedLevels(instanceToEdit.jlptLevels);
+      setSelectedTypes((instanceToEdit.cardTypes as any) || ['kanji', 'vocab', 'grammar']);
       setDailyNewLimit(instanceToEdit.dailyNewLimit);
       setDailyReviewLimit(instanceToEdit.dailyReviewLimit);
       setDisplaySettings(instanceToEdit.displaySettings || DEFAULT_DISPLAY_SETTINGS);
     } else {
       setName('Custom JLPT Study Deck');
-      setDescription('Custom Kanji instance tailored for my study goals.');
+      setDescription('Custom instance tailored for my study goals.');
       setSelectedLevels(['N5']);
+      setSelectedTypes(['kanji', 'vocab', 'grammar']);
       setDailyNewLimit(15);
       setDailyReviewLimit(100);
       setDisplaySettings(JSON.parse(JSON.stringify(DEFAULT_DISPLAY_SETTINGS)));
@@ -55,6 +58,16 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
     }
   };
 
+  const toggleType = (t: 'kanji' | 'vocab' | 'grammar') => {
+    if (selectedTypes.includes(t)) {
+      if (selectedTypes.length > 1) {
+        setSelectedTypes(selectedTypes.filter(x => x !== t));
+      }
+    } else {
+      setSelectedTypes([...selectedTypes, t]);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
@@ -64,6 +77,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
       name,
       description,
       jlptLevels: selectedLevels,
+      cardTypes: selectedTypes,
       displaySettings,
       dailyNewLimit,
       dailyReviewLimit,
@@ -90,7 +104,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 {instanceToEdit ? 'Configure Study Instance' : 'Create New Deck Instance'}
               </h3>
               <p className="text-xs text-gray-400">
-                Filter Kanji by JLPT level & customize exact card field visibility.
+                Filter by JLPT levels & card types (Kanji, Vocab, Grammar).
               </p>
             </div>
           </div>
@@ -115,7 +129,7 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 onChange={(e) => setName(e.target.value)}
                 required
                 className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white text-sm transition"
-                placeholder="e.g., N5 & N4 Core Kanji"
+                placeholder="e.g., N5 & N4 Core Vocab & Grammar"
               />
             </div>
             <div>
@@ -129,6 +143,37 @@ export const InstanceModal: React.FC<InstanceModalProps> = ({
                 className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#262626] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white text-sm transition"
                 placeholder="Brief summary of study targets..."
               />
+            </div>
+          </div>
+
+          {/* Card Types Selection */}
+          <div>
+            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-indigo-400 mb-2">
+              Card Types Included
+            </label>
+            <div className="grid grid-cols-3 gap-2.5">
+              {[
+                { type: 'kanji' as const, label: 'Kanji Cards' },
+                { type: 'vocab' as const, label: 'Vocab Cards' },
+                { type: 'grammar' as const, label: 'Grammar Cards' },
+              ].map(({ type, label }) => {
+                const isSelected = selectedTypes.includes(type);
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => toggleType(type)}
+                    className={`py-3 rounded-2xl font-bold text-xs border flex flex-col items-center justify-center gap-1 transition ${
+                      isSelected
+                        ? 'bg-white border-white text-black font-bold shadow-lg'
+                        : 'bg-[#1A1A1A] border-[#262626] text-gray-400 hover:bg-[#262626] hover:text-white'
+                    }`}
+                  >
+                    <span>{label}</span>
+                    {isSelected && <Check className="w-4 h-4 text-black" />}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

@@ -14,8 +14,8 @@ import {
 import { DeckInstance } from '../types';
 
 interface NavbarProps {
-  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary';
-  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'analytics' | 'dictionary') => void;
+  activeTab: 'home' | 'study' | 'canvas' | 'explorer' | 'grammarVocab' | 'analytics' | 'dictionary';
+  setActiveTab: (tab: 'home' | 'study' | 'canvas' | 'explorer' | 'grammarVocab' | 'analytics' | 'dictionary') => void;
   instances: DeckInstance[];
   activeInstance: DeckInstance | null;
   onSelectInstance: (instance: DeckInstance) => void;
@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="hidden md:flex items-center gap-1 bg-[#121212] p-1 rounded-2xl border border-[#262626]">
           <button
             onClick={() => setActiveTab('home')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'home'
                 ? 'bg-white text-black font-bold shadow'
                 : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
@@ -75,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('study')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'study'
                 ? 'bg-white text-black font-bold shadow'
                 : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
@@ -85,8 +85,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             Study
           </button>
           <button
+            onClick={() => setActiveTab('grammarVocab')}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
+              activeTab === 'grammarVocab'
+                ? 'bg-white text-black font-bold shadow'
+                : 'text-indigo-400 hover:text-white hover:bg-[#1A1A1A]'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            Grammar & Vocab
+          </button>
+          <button
             onClick={() => setActiveTab('dictionary')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'dictionary'
                 ? 'bg-white text-black font-bold shadow'
                 : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
@@ -97,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('canvas')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'canvas'
                 ? 'bg-white text-black font-bold shadow'
                 : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
@@ -108,18 +119,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('explorer')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'explorer'
                 ? 'bg-white text-black font-bold shadow'
                 : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            Explorer
+            Kanji
           </button>
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs transition ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-xs transition ${
               activeTab === 'analytics'
                 ? 'bg-white text-black font-bold shadow'
                 : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
